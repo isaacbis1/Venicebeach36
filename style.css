@@ -200,26 +200,22 @@ main {
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 }
-
 .available:hover {
   background-color: var(--color-secondary);
   color: var(--color-white);
   transform: scale(1.05);
 }
-
 .unavailable {
   background-color: #FFCCBC;
   color: #FF5722;
   border: 2px solid #FF5722;
   cursor: not-allowed;
 }
-
 .my-booking {
   background-color: #FFF9C4;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 }
-
 .my-booking:hover {
   background-color: var(--color-secondary);
   color: var(--color-white);
@@ -236,7 +232,6 @@ main {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
 }
-
 .cancel-btn:hover {
   background: #FF1744;
   transform: translateY(-2px);
@@ -252,12 +247,10 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .admin:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
-
 .admin h2 {
   color: var(--color-primary);
   margin-bottom: 20px;
@@ -270,28 +263,23 @@ table {
   border-collapse: collapse;
   margin-top: 20px;
 }
-
 table, th, td {
   border: 1px solid #EEEEEE;
 }
-
 th, td {
   padding: 12px;
   text-align: left;
   font-size: 1rem;
 }
-
 th {
   background-color: var(--color-secondary);
   color: var(--color-primary);
   font-weight: 600;
   text-transform: uppercase;
 }
-
 tbody tr:nth-child(even) {
   background-color: #FFFDE7;
 }
-
 tbody tr:hover {
   background-color: #FFF9C4;
 }
@@ -305,7 +293,6 @@ button {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
 }
-
 button:hover {
   background: var(--color-accent);
   transform: translateY(-2px);
@@ -320,7 +307,6 @@ footer {
   margin-top: auto;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
-
 footer p {
   font-size: 1rem;
 }
@@ -332,7 +318,6 @@ footer p {
   right: 20px;
   z-index: 1001;
 }
-
 .notification {
   background-color: var(--color-secondary);
   color: var(--color-primary);
@@ -342,12 +327,10 @@ footer p {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
-
 @keyframes fadein {
   from { opacity: 0; right: 0; }
   to { opacity: 1; right: 20px; }
 }
-
 @keyframes fadeout {
   from { opacity: 1; right: 20px; }
   to { opacity: 0; right: 0; }
@@ -406,4 +389,3 @@ footer p {
     font-size: 1.8rem;
   }
 }
-

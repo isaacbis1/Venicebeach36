@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Meta tag per abilitare la modalità a schermo intero su iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Prenotazione Campi</title>
-
-  <!-- Font Awesome per le icone -->
+  
+  <!-- Import Font Awesome per le icone -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -16,7 +15,7 @@
     referrerpolicy="no-referrer"
   />
 
-  <!-- Collega il tuo file CSS -->
+  <!-- Collega il file CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -44,20 +43,17 @@
   <!-- Sezione Applicazione -->
   <div id="app-area">
     <header>
-      <p id="notes-content"></p>     <!-- visibile a tutti -->
-<textarea id="admin-notes"></textarea>  <!-- solo per admin (JS la mostra/nasconde) -->
-
       <a href="#" class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
       <h1>Prenotazione Campi</h1>
     </header>
 
     <main>
-      <!-- SEZIONE NOTE (visibili a tutti, modificabili solo dall'admin) -->
+      <!-- SEZIONE NOTE (visibile a tutti; editabile solo da admin) -->
       <section class="notes-section" id="notes-section">
         <h2>Note</h2>
-        <!-- Contenuto delle note, sempre visibile a tutti -->
+        <!-- Visibile a tutti -->
         <p id="notes-content"></p>
-        <!-- Textarea visibile solo all'admin (verrà nascosta via JS se non si è admin) -->
+        <!-- Textarea (admin la vede e può scrivere) -->
         <textarea id="admin-notes" rows="5" placeholder="Scrivi qui le tue note..."></textarea>
       </section>
 
@@ -110,10 +106,8 @@
           <tbody id="credentials-table"></tbody>
         </table>
 
-        <!-- SEZIONE per la gestione delle immagini login -->
         <h2>Gestione Immagini Login (max 10)</h2>
         <div class="image-admin-form">
-          <!-- 10 coppie di URL + Link -->
           <div>
             <label>Immagine 1 (URL):</label>
             <input type="text" id="image1URL" placeholder="URL immagine 1">
@@ -188,10 +182,11 @@
   <!-- Contenitore per le Notifiche -->
   <div id="notification-container"></div>
 
-  <!-- Firebase 8.x Scripts -->
+  <!-- Firebase Scripts (versione 8.x) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <!-- Collega il tuo file JavaScript -->
+  
+  <!-- Collega il file JS -->
   <script src="script.js"></script>
 </body>
 </html>

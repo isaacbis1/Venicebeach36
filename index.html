@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Prenotazione Campi - No Registrazione</title>
+  <!-- Meta tag per abilitare la modalità a schermo intero su iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Prenotazione Campi</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Font Awesome -->
+  <!-- Font Awesome per le icone -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -17,18 +16,17 @@
     referrerpolicy="no-referrer"
   />
 
-  <!-- Firebase 8.x -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- Collega il tuo file CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <!-- Sezione Login -->
   <div id="login-area">
     <div class="login-container">
-      <!-- Qui mostreremo eventuali immagini di login -->
-      <div id="login-images-container" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 1rem;"></div>
-
-      <!-- Form login -->
+      <!-- RIGA IMMAGINI (visibili anche prima del login) -->
+      <div id="login-images-container"></div>
+      <!-- FORM LOGIN -->
       <div class="login-form">
         <h1>Benvenuto</h1>
         <p>
@@ -36,11 +34,9 @@
           Puoi prenotare <strong>un solo slot di 45 minuti</strong> al giorno (dalle 11:00 alle 21:00).<br/>
           Potrai cancellare solo la tua prenotazione.
         </p>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">
-          <i class="fas fa-sign-in-alt"></i> Accedi
-        </button>
+        <input type="text" id="username" placeholder="Username" aria-label="Username">
+        <input type="password" id="password" placeholder="Password" aria-label="Password">
+        <button onclick="login()"><i class="fas fa-sign-in-alt"></i> Accedi</button>
       </div>
     </div>
   </div>
@@ -51,8 +47,18 @@
       <a href="#" class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
       <h1>Prenotazione Campi</h1>
     </header>
+
     <main>
-      <!-- Campi -->
+      <!-- SEZIONE NOTE (visibili a tutti, modificabili solo dall'admin) -->
+      <section class="notes-section" id="notes-section">
+        <h2>Note</h2>
+        <!-- Contenuto delle note, sempre visibile a tutti -->
+        <p id="notes-content"></p>
+        <!-- Textarea visibile solo all'admin (verrà nascosta via JS se non si è admin) -->
+        <textarea id="admin-notes" rows="5" placeholder="Scrivi qui le tue note..."></textarea>
+      </section>
+
+      <!-- Sezione Campi (Griglia 2x2) -->
       <div class="fields-container">
         <div class="field-box" id="field-Volley1">
           <h3>Volley1</h3>
@@ -101,85 +107,88 @@
           <tbody id="credentials-table"></tbody>
         </table>
 
-        <h2>Gestione Immagini (max 10)</h2>
-        <div style="display: flex; flex-direction: column; gap: 10px;" id="image-admin-form">
-          <!-- 10 campi, immagine URL e link -->
+        <!-- SEZIONE per la gestione delle immagini login -->
+        <h2>Gestione Immagini Login (max 10)</h2>
+        <div class="image-admin-form">
+          <!-- 10 coppie di URL + Link -->
           <div>
-            <label>Img 1 (URL):</label>
-            <input type="text" id="image1URL">
+            <label>Immagine 1 (URL):</label>
+            <input type="text" id="image1URL" placeholder="URL immagine 1">
             <label>Link 1:</label>
-            <input type="text" id="image1Link">
+            <input type="text" id="image1Link" placeholder="Link immagine 1">
           </div>
           <div>
-            <label>Img 2 (URL):</label>
-            <input type="text" id="image2URL">
+            <label>Immagine 2 (URL):</label>
+            <input type="text" id="image2URL" placeholder="URL immagine 2">
             <label>Link 2:</label>
-            <input type="text" id="image2Link">
+            <input type="text" id="image2Link" placeholder="Link immagine 2">
           </div>
           <div>
-            <label>Img 3 (URL):</label>
-            <input type="text" id="image3URL">
+            <label>Immagine 3 (URL):</label>
+            <input type="text" id="image3URL" placeholder="URL immagine 3">
             <label>Link 3:</label>
-            <input type="text" id="image3Link">
+            <input type="text" id="image3Link" placeholder="Link immagine 3">
           </div>
           <div>
-            <label>Img 4 (URL):</label>
-            <input type="text" id="image4URL">
+            <label>Immagine 4 (URL):</label>
+            <input type="text" id="image4URL" placeholder="URL immagine 4">
             <label>Link 4:</label>
-            <input type="text" id="image4Link">
+            <input type="text" id="image4Link" placeholder="Link immagine 4">
           </div>
           <div>
-            <label>Img 5 (URL):</label>
-            <input type="text" id="image5URL">
+            <label>Immagine 5 (URL):</label>
+            <input type="text" id="image5URL" placeholder="URL immagine 5">
             <label>Link 5:</label>
-            <input type="text" id="image5Link">
+            <input type="text" id="image5Link" placeholder="Link immagine 5">
           </div>
           <div>
-            <label>Img 6 (URL):</label>
-            <input type="text" id="image6URL">
+            <label>Immagine 6 (URL):</label>
+            <input type="text" id="image6URL" placeholder="URL immagine 6">
             <label>Link 6:</label>
-            <input type="text" id="image6Link">
+            <input type="text" id="image6Link" placeholder="Link immagine 6">
           </div>
           <div>
-            <label>Img 7 (URL):</label>
-            <input type="text" id="image7URL">
+            <label>Immagine 7 (URL):</label>
+            <input type="text" id="image7URL" placeholder="URL immagine 7">
             <label>Link 7:</label>
-            <input type="text" id="image7Link">
+            <input type="text" id="image7Link" placeholder="Link immagine 7">
           </div>
           <div>
-            <label>Img 8 (URL):</label>
-            <input type="text" id="image8URL">
+            <label>Immagine 8 (URL):</label>
+            <input type="text" id="image8URL" placeholder="URL immagine 8">
             <label>Link 8:</label>
-            <input type="text" id="image8Link">
+            <input type="text" id="image8Link" placeholder="Link immagine 8">
           </div>
           <div>
-            <label>Img 9 (URL):</label>
-            <input type="text" id="image9URL">
+            <label>Immagine 9 (URL):</label>
+            <input type="text" id="image9URL" placeholder="URL immagine 9">
             <label>Link 9:</label>
-            <input type="text" id="image9Link">
+            <input type="text" id="image9Link" placeholder="Link immagine 9">
           </div>
           <div>
-            <label>Img 10 (URL):</label>
-            <input type="text" id="image10URL">
+            <label>Immagine 10 (URL):</label>
+            <input type="text" id="image10URL" placeholder="URL immagine 10">
             <label>Link 10:</label>
-            <input type="text" id="image10Link">
+            <input type="text" id="image10Link" placeholder="Link immagine 10">
           </div>
 
-          <button onclick="saveAdminImages()">
-            <i class="fas fa-save"></i> Salva Immagini
-          </button>
+          <button onclick="saveAdminImages()"><i class="fas fa-save"></i> Salva Immagini</button>
         </div>
       </div>
     </main>
+
     <footer>
       <p>© 2025 Prenotazione Campi - Tutti i diritti riservati</p>
     </footer>
   </div>
 
-  <!-- Notifiche -->
+  <!-- Contenitore per le Notifiche -->
   <div id="notification-container"></div>
 
-  <!-- script -->
+  <!-- Firebase 8.x Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- Collega il tuo file JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>

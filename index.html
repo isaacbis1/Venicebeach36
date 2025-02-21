@@ -6,16 +6,31 @@
   <!-- Meta tag per abilitare la modalità a schermo intero su iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Prenotazione Campi</title>
+
+  <!-- Collega il file CSS -->
   <link rel="stylesheet" href="style.css">
+
   <!-- Font Awesome per le icone -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-        integrity="sha512-pI3F2K73oUjM3yoAGlwE2Y6dc+ZNJMfLyXQThOqNpqKgUyfnBVFdQF6Kl9gWQheCH1E2V0GadNkm+jGdA1oAkg==" 
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-pI3F2K73oUjM3yoAGlwE2Y6dc+ZNJMfLyXQThOqNpqKgUyfnBVFdQF6Kl9gWQheCH1E2V0GadNkm+jGdA1oAkg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Firebase 8.x Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
   <!-- Sezione Login -->
   <div id="login-area">
     <div class="login-container">
+      <!-- RIGA IMMAGINI (Max 10) -->
+      <div id="login-images-container" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 1rem;"></div>
+
+      <!-- FORM LOGIN -->
       <div class="login-form">
         <h1>Benvenuto</h1>
         <p>
@@ -36,7 +51,9 @@
       <a href="#" class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
       <h1>Prenotazione Campi</h1>
     </header>
+
     <main>
+      <!-- Griglia 2x2 Campi -->
       <div class="fields-container">
         <div class="field-box" id="field-Volley1">
           <h3>Volley1</h3>
@@ -84,8 +101,79 @@
           </thead>
           <tbody id="credentials-table"></tbody>
         </table>
+
+        <!-- SEZIONE GESTIONE IMMAGINI (MAX 10) -->
+        <h2>Gestione Immagini (max 10)</h2>
+        <p>Inserisci URL e Link per ogni immagine (verranno mostrate nel login).</p>
+        <div id="image-admin-form" style="display: flex; flex-direction: column; gap: 10px;">
+
+          <!-- 10 campi, ognuno con URL e Link -->
+          <div>
+            <label>Img 1 (URL):</label>
+            <input type="text" id="image1URL">
+            <label>Link 1:</label>
+            <input type="text" id="image1Link">
+          </div>
+          <div>
+            <label>Img 2 (URL):</label>
+            <input type="text" id="image2URL">
+            <label>Link 2:</label>
+            <input type="text" id="image2Link">
+          </div>
+          <div>
+            <label>Img 3 (URL):</label>
+            <input type="text" id="image3URL">
+            <label>Link 3:</label>
+            <input type="text" id="image3Link">
+          </div>
+          <div>
+            <label>Img 4 (URL):</label>
+            <input type="text" id="image4URL">
+            <label>Link 4:</label>
+            <input type="text" id="image4Link">
+          </div>
+          <div>
+            <label>Img 5 (URL):</label>
+            <input type="text" id="image5URL">
+            <label>Link 5:</label>
+            <input type="text" id="image5Link">
+          </div>
+          <div>
+            <label>Img 6 (URL):</label>
+            <input type="text" id="image6URL">
+            <label>Link 6:</label>
+            <input type="text" id="image6Link">
+          </div>
+          <div>
+            <label>Img 7 (URL):</label>
+            <input type="text" id="image7URL">
+            <label>Link 7:</label>
+            <input type="text" id="image7Link">
+          </div>
+          <div>
+            <label>Img 8 (URL):</label>
+            <input type="text" id="image8URL">
+            <label>Link 8:</label>
+            <input type="text" id="image8Link">
+          </div>
+          <div>
+            <label>Img 9 (URL):</label>
+            <input type="text" id="image9URL">
+            <label>Link 9:</label>
+            <input type="text" id="image9Link">
+          </div>
+          <div>
+            <label>Img 10 (URL):</label>
+            <input type="text" id="image10URL">
+            <label>Link 10:</label>
+            <input type="text" id="image10Link">
+          </div>
+
+          <button onclick="saveAdminImages()"><i class="fas fa-save"></i> Salva Immagini</button>
+        </div>
       </div>
     </main>
+
     <footer>
       <p>© 2025 Prenotazione Campi - Tutti i diritti riservati</p>
     </footer>
@@ -94,9 +182,7 @@
   <!-- Contenitore per le Notifiche -->
   <div id="notification-container"></div>
 
-  <!-- Firebase 8.x Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- Collega il file JS -->
   <script src="script.js"></script>
 </body>
 </html>

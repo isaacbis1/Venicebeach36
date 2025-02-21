@@ -246,6 +246,10 @@ main {
   background: var(--color-accent);
   transform: translateY(-2px);
 }
+#admin-notes {
+  display: none;
+}
+
 
 /* Sezione Campi - Grid 2x2 */
 .fields-container {

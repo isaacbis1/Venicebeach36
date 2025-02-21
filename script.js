@@ -22,6 +22,7 @@ document.addEventListener('keydown', (event) => {
  *  CONFIGURAZIONE FIREBASE
  ***********************/
 const firebaseConfig = {
+  // Metti qui le TUE credenziali
   apiKey: "AIzaSyBivERuJvrO947t2Idv8DM3gZyfuqEQahw",
   authDomain: "campi-414b4.firebaseapp.com",
   databaseURL: "https://campi-414b4-default-rtdb.europe-west1.firebasedatabase.app",
@@ -43,7 +44,7 @@ let currentUser = null;
 const adminUsername = "admin";
 const adminPassword = "passwordAdmin";
 
-// Esempio di staticUsers
+// Sostituisci con i tuoi user e relative password
 const staticUsers = {
 "admin": adminPassword,
 
@@ -502,9 +503,11 @@ function login() {
     return;
   }
 
+  // Se admin
   if (username === adminUsername && password === adminPassword) {
     authenticateUser(username);
   } else {
+    // Altrimenti cerca in staticUsers
     authenticateStaticUser(username, password);
   }
 }
@@ -517,16 +520,14 @@ function authenticateUser(username) {
   checkAndResetAfterTen();
   showNotification(`Benvenuto, ${username}!`);
 
-  // Carichiamo le note in tempo reale
+  // Carica note e immagini in real-time
   loadAdminNotesRealtime();
-
-  // Carichiamo le immagini in tempo reale
   loadAdminImagesRealtime();
 }
 
 function authenticateStaticUser(username, password) {
   if (staticUsers[username] && staticUsers[username] === password) {
-    // Controllo se utente è disabilitato in Firestore
+    // Controlla se l'utente è disabilitato in Firestore
     db.collection("users").doc(username).get().then(doc => {
       const disabled = doc.exists ? doc.data().disabled : false;
       if (disabled) {
@@ -540,10 +541,8 @@ function authenticateStaticUser(username, password) {
       checkAndResetAfterTen();
       showNotification(`Benvenuto, ${username}!`);
 
-      // Carichiamo le note in tempo reale
+      // Carica note e immagini in real-time
       loadAdminNotesRealtime();
-
-      // Carichiamo le immagini in tempo reale
       loadAdminImagesRealtime();
     }).catch(err => {
       console.error(err);
@@ -577,7 +576,7 @@ function loadReservationsFromFirestore() {
         reservations[field][today][time] = user;
       });
       populateAllFields();
-      listenRealtimeForToday();
+      listenRealtimeForToday(); // Ascolto in tempo reale
     })
     .catch(err => {
       console.error("Errore caricamento prenotazioni:", err);
@@ -666,14 +665,17 @@ function populateFieldSlots(fieldName) {
 
 function bookSlot(fieldName, slot) {
   const today = getTodayDate();
+  // Evita doppia prenotazione se non admin
   if (currentUser !== adminUsername && userHasBookingToday()) {
     showNotification('Hai già effettuato una prenotazione per oggi.');
     return;
   }
+  // Se già prenotato
   if (reservations[fieldName][today][slot]) {
     showNotification('Questo slot è già prenotato.');
     return;
   }
+  // Salviamo su Firestore
   db.collection("users").doc(currentUser).get().then(doc => {
     const role = doc.exists ? doc.data().role : "user";
     saveReservationToFirestore(fieldName, today, slot, currentUser, role)
@@ -781,13 +783,12 @@ function toggleUserStatus(username, currentDisabled) {
 /***********************
  *  SEZIONE NOTE ADMIN
  ***********************/
-
-// 1) Carichiamo le note in real time
+// Caricamento in tempo reale
 function loadAdminNotesRealtime() {
   db.collection("admin").doc("notes").onSnapshot(doc => {
     if (doc.exists) {
       const noteText = doc.data().text || "";
-      // Aggiorniamo il <p> visibile a tutti
+      // Aggiorniamo il <p> (visibile a tutti)
       document.getElementById("notes-content").textContent = noteText;
 
       // Se l'utente è admin, aggiorniamo la textarea
@@ -796,14 +797,14 @@ function loadAdminNotesRealtime() {
         adminNotes.value = noteText;
       }
     } else {
-      // Se non esiste, creiamo un doc vuoto
+      // Creiamo il doc se non esiste
       db.collection("admin").doc("notes").set({ text: "" });
       document.getElementById("notes-content").textContent = "";
     }
   });
 }
 
-// 2) Salvataggio automatico appena l'admin digita
+// Salvataggio automatico mentre l'admin digita
 function saveAdminNotes() {
   if (currentUser !== adminUsername) {
     showNotification("Non hai i permessi per modificare le note.");
@@ -827,7 +828,6 @@ function loadAdminImagesRealtime() {
 
     if (doc.exists) {
       const data = doc.data();
-
       for (let i = 1; i <= 10; i++) {
         const urlField = `image${i}URL`;
         const linkField = `image${i}Link`;
@@ -898,11 +898,11 @@ function toggleAdminSection() {
   const adminSection = document.getElementById('admin-area');
   adminSection.style.display = (currentUser === adminUsername) ? 'block' : 'none';
 
-  // Mostra/occulta la textarea delle note riservata all'admin
+  // Mostra/occulta la textarea delle note per admin
   const adminNotes = document.getElementById('admin-notes');
   if (currentUser === adminUsername) {
     adminNotes.style.display = 'block';
-    // Aggiunge l'evento che salva automaticamente mentre l'admin scrive:
+    // Ascolta l'input e salva in automatico
     adminNotes.addEventListener('input', saveAdminNotes);
   } else {
     adminNotes.style.display = 'none';
@@ -911,14 +911,15 @@ function toggleAdminSection() {
 }
 
 /**
- * Il reset quotidiano (dopo le 10) NON elimina le note,
- * ma solo le prenotazioni degli utenti normali.
+ * Il reset quotidiano dopo le 10 NON elimina le note,
+ * ma solo le prenotazioni degli utenti (tranne admin).
  */
 function checkAndResetAfterTen() {
   const lastResetDate = localStorage.getItem('lastResetDate');
   const today = getTodayDate();
   const now = new Date();
 
+  // Esegui reset se non è stato fatto oggi e se l'ora >= 10
   if (lastResetDate !== today && now.getHours() >= 10) {
     resetAllReservations();
     localStorage.setItem('lastResetDate', today);
@@ -955,9 +956,9 @@ function resetAllReservations() {
  *  INIZIALIZZAZIONE
  ***********************/
 document.addEventListener('DOMContentLoaded', () => {
-  // Inizialmente, l'area app è nascosta, si vede solo il login
+  // Mostra la pagina di login, nascondi l'app
   toggleSections(false);
 
-  // Carichiamo subito le immagini (anche per il login)
+  // Carichiamo subito le immagini (anche per la homepage di login)
   loadAdminImagesRealtime();
 });

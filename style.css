@@ -5,30 +5,44 @@
   padding: 0;
 }
 
-/* Import del font Poppins */
+/* Import del font Poppins (o qualsiasi altro font gradito) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Variabili CSS per la palette di colori */
+/* Variabili CSS per la palette di colori “estiva-futuristica” */
 :root {
-  --color-primary: #FF8C00; /* Arancione scuro */
-  --color-secondary: #FFD700; /* Giallo oro */
-  --color-accent: #FF4500; /* Arancione rosso */
-  --color-bg: #FFF8E1; /* Crema chiaro */
+  --color-primary: #FF6F61; /* Rosso pastello-aranciato */
+  --color-secondary: #FFD93D; /* Giallo luminoso */
+  --color-accent: #40C9A2; /* Turchese/Verde acqua */
+  --color-bg: #FFFEE7; /* Giallino pastello chiarissimo */
   --color-text: #333333;
   --color-white: #FFFFFF;
-  --color-overlay: rgba(255, 255, 255, 0.1);
+  --color-overlay: rgba(255, 255, 255, 0.2);
 }
 
-/* Stile Body */
+/* Impedisce la selezione del testo in tutto il body */
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-secondary) 100%);
+  background: linear-gradient(135deg, #FFEECC 0%, #FFDAC1 100%);
   color: var(--color-text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   transition: background 0.3s ease;
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; 
+  overflow-x: hidden;
+}
+
+/* Consenti la selezione negli input e textarea, in caso serva compilare o copiare da lì */
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* Header */
@@ -40,14 +54,15 @@ header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 2.3rem;
   font-weight: 700;
   letter-spacing: 1px;
   margin-top: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 .logout {
@@ -61,7 +76,7 @@ header h1 {
 }
 
 .logout:hover {
-  color: var(--color-secondary);
+  color: var(--color-accent);
 }
 
 /* Main */
@@ -79,9 +94,10 @@ main {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--color-overlay);
   padding: 40px 30px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
 #login-area:hover {
@@ -91,18 +107,36 @@ main {
 
 .login-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+/* RIGA IMMAGINI */
+#login-images-container {
+  display: flex;
+  flex-wrap: wrap;        /* Se superano lo spazio vanno a capo */
+  justify-content: center;/* Centra orizzontalmente */
+  gap: 1rem;              /* Distanza fra di loro */
+  margin-bottom: 1rem;
+}
+
+#login-images-container a img {
+  max-width: 80px;        /* Dimensione massima di ogni immagine */
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
+  margin-top: 10px;
 }
 
 .login-form h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 15px;
   color: var(--color-primary);
 }
@@ -124,7 +158,7 @@ main {
 }
 
 .login-form input:focus {
-  border-color: var(--color-secondary);
+  border-color: var(--color-accent);
   outline: none;
 }
 
@@ -150,26 +184,87 @@ main {
   transform: translateY(-2px);
 }
 
-/* Sezione Campi */
+/* Sezione NOTE visibili a tutti */
+.notes-section {
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+  padding: 25px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notes-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.notes-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+}
+
+#notes-content {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #444;
+  white-space: pre-wrap; /* conserva i ritorni a capo */
+}
+
+#admin-notes {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px;
+  border: 2px solid var(--color-primary);
+  border-radius: 6px;
+  resize: vertical;
+  margin-bottom: 10px;
+  transition: border-color 0.3s ease;
+  display: none; /* Nascosto di default, lo mostreremo per l'admin */
+}
+
+#admin-notes:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+#save-notes-btn {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: none; /* Nascosto di default, lo mostreremo per l'admin */
+}
+
+#save-notes-btn:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+/* Sezione Campi - Grid 2x2 */
 .fields-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 30px;
 }
 
 .field-box {
-  flex: 1 1 300px;
   background: var(--color-white);
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .field-box:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .field-box h3 {
@@ -177,51 +272,53 @@ main {
   margin-bottom: 15px;
   font-size: 1.5rem;
   font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
 }
 
 .slot-info {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
 }
 
 .slot {
   padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   font-size: 0.95rem;
   text-align: center;
   transition: background 0.3s ease, transform 0.2s ease;
   cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
 .available {
-  background-color: #FFF3E0;
+  background-color: #fdf5e6;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 }
 
 .available:hover {
-  background-color: var(--color-secondary);
+  background-color: var(--color-accent);
   color: var(--color-white);
   transform: scale(1.05);
 }
 
 .unavailable {
-  background-color: #FFCCBC;
-  color: #FF5722;
-  border: 2px solid #FF5722;
+  background-color: #ffc9c9;
+  color: #f34e4e;
+  border: 2px solid #f34e4e;
   cursor: not-allowed;
 }
 
 .my-booking {
-  background-color: #FFF9C4;
+  background-color: #fff9c4;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 }
 
 .my-booking:hover {
-  background-color: var(--color-secondary);
+  background-color: var(--color-accent);
   color: var(--color-white);
   transform: scale(1.05);
 }
@@ -248,21 +345,22 @@ main {
   margin-top: 40px;
   background: var(--color-white);
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .admin:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .admin h2 {
   color: var(--color-primary);
   margin-bottom: 20px;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
 }
 
 table {
@@ -309,6 +407,19 @@ button {
 button:hover {
   background: var(--color-accent);
   transform: translateY(-2px);
+}
+
+/* Form gestione immagini login */
+.image-admin-form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.image-admin-form label {
+  font-weight: 600;
+  margin-bottom: 2px;
 }
 
 /* Footer */
@@ -359,13 +470,13 @@ footer p {
     padding: 30px 15px;
   }
   .fields-container {
-    gap: 20px;
+    grid-gap: 20px;
   }
   .field-box h3 {
     font-size: 1.3rem;
   }
   .admin h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   table, th, td {
     font-size: 0.9rem;
@@ -374,11 +485,26 @@ footer p {
 
 @media (max-width: 768px) {
   #login-area {
-    padding: 30px 20px;
+    padding: 20px;
+    box-shadow: none; /* Rimuove l'effetto hover su mobile */
+    transform: none;  /* Evita movimenti */
+  }
+  .login-container {
+    max-width: 100%;
+    padding: 15px;
+  }
+  .logout {
+    position: static;
+    margin: 10px 0;
+  }
+  .admin h2 {
+    font-size: 1.4rem;
+  }
+  table, th, td {
+    font-size: 0.85rem;
   }
   .fields-container {
-    flex-direction: column;
-    gap: 25px;
+    grid-template-columns: 1fr; /* Rende i campi a colonna singola */
   }
   .slot-info {
     flex-direction: column;
@@ -386,23 +512,17 @@ footer p {
   .slot {
     width: 100%;
   }
-  .logout {
-    position: static;
-    margin: 10px 0;
-  }
-  .admin h2 {
-    font-size: 1.6rem;
-  }
-  table, th, td {
-    font-size: 0.85rem;
-  }
 }
 
 @media (max-width: 480px) {
-  #login-area h1 {
-    font-size: 1.8rem;
+  header h1,
+  footer p {
+    font-size: 1.4rem;
   }
-  header h1, footer p {
-    font-size: 1.8rem;
+  .notes-section h2 {
+    font-size: 1.4rem;
+  }
+  #login-area h1 {
+    font-size: 1.6rem;
   }
 }

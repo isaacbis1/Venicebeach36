@@ -22,15 +22,14 @@ document.addEventListener('keydown', (event) => {
  *  CONFIGURAZIONE FIREBASE
  ***********************/
 const firebaseConfig = {
-  // Metti qui le TUE credenziali
   apiKey: "AIzaSyBivERuJvrO947t2Idv8DM3gZyfuqEQahw",
   authDomain: "campi-414b4.firebaseapp.com",
   databaseURL: "https://campi-414b4-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "campi-414b4",
   storageBucket: "campi-414b4.firebasestorage.app",
   messagingSenderId: "985324700492",
-  appId: "1:985324700492:web:84270153b2145fb6ed85e9",
-  measurementId: "G-7MPY6J1MN4"
+  appId: "1:985324700492:web:b8cb569e83bb2e24ed85e9",
+  measurementId: "G-3W0ZKB4S5Q"
 };
 
 // Inizializzazione Firebase

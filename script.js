@@ -1,43 +1,48 @@
 /***********************
- * DISABILITA TASTO DESTRO E SCORCIATOIE
+ *  DISABILITA TASTO DESTRO E SCORCIATOIE
  ***********************/
-document.addEventListener('contextmenu', evt => evt.preventDefault());
-document.addEventListener('keydown', evt => {
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+});
+
+document.addEventListener('keydown', (event) => {
   if (
-    evt.key === "F12" ||
-    (evt.ctrlKey && evt.shiftKey && evt.key === "I") ||
-    (evt.ctrlKey && evt.key === "U") ||
-    (evt.ctrlKey && evt.key === "S") ||
-    (evt.ctrlKey && evt.key === "C")
+    event.key === 'F12' ||
+    (event.ctrlKey && event.shiftKey && event.key === 'I') ||
+    (event.ctrlKey && event.key === 'U') ||
+    (event.ctrlKey && event.key === 'S') ||
+    (event.ctrlKey && event.key === 'C')
   ) {
-    evt.preventDefault();
+    event.preventDefault();
     return false;
   }
 });
 
 /***********************
- * CONFIGURAZIONE FIREBASE
+ *  CONFIGURAZIONE FIREBASE
  ***********************/
 const firebaseConfig = {
-  apiKey: "AIzaSyBivERuJvrO947t2Idv8DM3gZyfuqEQahw",
-  authDomain: "campi-414b4.firebaseapp.com",
-  projectId: "campi-414b4",
-  storageBucket: "campi-414b4.firebasestorage.app",
-  messagingSenderId: "985324700492",
-  appId: "1:985324700492:web:b8cb569e83bb2e24ed85e9",
-  measurementId: "G-3W0ZKB4S5Q"
+  // Sostituisci con le tue credenziali Firebase
+  apiKey: "API_KEY_REALE",
+  authDomain: "APP_DOMAIN",
+  projectId: "PROGETT_ID",
+  storageBucket: "STORAGE_BUCKET",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
 };
+
+// Inizializzazione Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 /***********************
- * VARIABILI GLOBALI
+ *  VARIABILI GLOBALI
  ***********************/
 let currentUser = null;
-let adminPassword = "passwordAdmin"; // Cambia se vuoi
 const adminUsername = "admin";
+const adminPassword = "passwordAdmin";
 
-// Dizionario 200 user + admin
+// Esempio di staticUsers
 const staticUsers = {
 "admin": adminPassword,
 
@@ -444,6 +449,9 @@ const staticUsers = {
 };
 
 
+/***********************
+ *  TIME SLOTS & RESERVATIONS
+ ***********************/
 const timeSlots = [
   "11:00", "11:45",
   "12:30", "13:15",
@@ -462,95 +470,107 @@ let reservations = {
 };
 
 /***********************
- * ON LOAD
- ***********************/
-document.addEventListener('DOMContentLoaded', () => {
-  toggleSections(false); // mostriamo solo login
-  loadAdminImagesRealtime(); // carichiamo le immagini anche da non loggati
-});
-
-/***********************
- * FUNZIONI UTILITY
+ *  FUNZIONI UTILITY
  ***********************/
 function getTodayDate() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,'0');
-  const dd = String(d.getDate()).padStart(2,'0');
+  const today = new Date();
+  let yyyy = today.getFullYear();
+  let mm = String(today.getMonth() + 1).padStart(2, '0');
+  let dd = String(today.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function showNotification(msg) {
-  const container = document.getElementById("notification-container");
-  const div = document.createElement("div");
-  div.className = "notification";
-  div.textContent = msg;
-  container.appendChild(div);
-  setTimeout(() => div.remove(), 3000);
-}
-
-function toggleSections(isLogged) {
-  document.getElementById("login-area").style.display = isLogged ? "none" : "flex";
-  document.getElementById("app-area").style.display = isLogged ? "flex" : "none";
-}
-
-function toggleAdminSection() {
-  const adminSec = document.getElementById("admin-area");
-  if (!adminSec) return;
-  adminSec.style.display = (currentUser === adminUsername) ? "block" : "none";
+function showNotification(message) {
+  const container = document.getElementById('notification-container');
+  const notification = document.createElement('div');
+  notification.classList.add('notification');
+  notification.textContent = message;
+  container.appendChild(notification);
+  setTimeout(() => notification.remove(), 3000);
 }
 
 /***********************
- * LOGIN & LOGOUT
+ *  LOGIN & LOGOUT
  ***********************/
 function login() {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
 
   if (!username || !password) {
-    showNotification("Inserisci username e password.");
+    showNotification('Inserisci username e password.');
     return;
   }
 
-  if (!staticUsers[username]) {
-    showNotification("Username inesistente nel dictionary!");
-    return;
-  }
-  // se corrisponde
-  if (staticUsers[username] === password) {
-    // Se user = admin => admin
-    if (username === adminUsername) {
-      currentUser = adminUsername;
-      showNotification("Accesso come admin!");
-    } else {
-      currentUser = username;
-      showNotification("Benvenuto " + username + "!");
-    }
-    toggleSections(true);
-    toggleAdminSection();
-    loadReservationsFromFirestore();
-    checkAndResetAfterTen();
+  if (username === adminUsername && password === adminPassword) {
+    authenticateUser(username);
   } else {
-    showNotification("Password errata per " + username);
+    authenticateStaticUser(username, password);
+  }
+}
+
+function authenticateUser(username) {
+  currentUser = username;
+  toggleSections(true);
+  toggleAdminSection();
+  loadReservationsFromFirestore();
+  checkAndResetAfterTen();
+  showNotification(`Benvenuto, ${username}!`);
+
+  // Carichiamo le note in tempo reale
+  loadAdminNotesRealtime();
+
+  // Carichiamo le immagini in tempo reale
+  loadAdminImagesRealtime();
+}
+
+function authenticateStaticUser(username, password) {
+  if (staticUsers[username] && staticUsers[username] === password) {
+    // Controllo se utente è disabilitato in Firestore
+    db.collection("users").doc(username).get().then(doc => {
+      const disabled = doc.exists ? doc.data().disabled : false;
+      if (disabled) {
+        showNotification("Questo utente è disabilitato.");
+        return;
+      }
+      currentUser = username;
+      toggleSections(true);
+      toggleAdminSection();
+      loadReservationsFromFirestore();
+      checkAndResetAfterTen();
+      showNotification(`Benvenuto, ${username}!`);
+
+      // Carichiamo le note in tempo reale
+      loadAdminNotesRealtime();
+
+      // Carichiamo le immagini in tempo reale
+      loadAdminImagesRealtime();
+    }).catch(err => {
+      console.error(err);
+      showNotification("Errore durante il login.");
+    });
+  } else {
+    showNotification("Credenziali errate!");
   }
 }
 
 function logout() {
   currentUser = null;
   toggleSections(false);
-  showNotification("Logout effettuato con successo.");
+  showNotification("Sei uscito con successo.");
 }
 
 /***********************
- * FIRESTORE PRENOTAZIONI
+ *  FIRESTORE - PRENOTAZIONI
  ***********************/
 function loadReservationsFromFirestore() {
   const today = getTodayDate();
   reservations = { "Volley1": {}, "Volley2": {}, "BasketCalcio": {}, "Ping-pong": {} };
 
-  db.collection("reservations").where("date","==",today).get()
-    .then(qs => {
-      qs.forEach(doc => {
+  db.collection("reservations")
+    .where("date", "==", today)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
         const { field, time, user } = doc.data();
         if (!reservations[field][today]) reservations[field][today] = {};
         reservations[field][today][time] = user;
@@ -559,32 +579,33 @@ function loadReservationsFromFirestore() {
       listenRealtimeForToday();
     })
     .catch(err => {
-      console.error(err);
+      console.error("Errore caricamento prenotazioni:", err);
       showNotification("Errore caricamento prenotazioni.");
     });
 }
 
 function listenRealtimeForToday() {
   const today = getTodayDate();
-  db.collection("reservations").where("date","==",today)
-    .onSnapshot(snap => {
+  db.collection("reservations")
+    .where("date", "==", today)
+    .onSnapshot(snapshot => {
       reservations = { "Volley1": {}, "Volley2": {}, "BasketCalcio": {}, "Ping-pong": {} };
-      snap.forEach(doc => {
+      snapshot.forEach(doc => {
         const { field, time, user } = doc.data();
         if (!reservations[field][today]) reservations[field][today] = {};
         reservations[field][today][time] = user;
       });
       populateAllFields();
       populateAdminTable();
-      if (currentUser === adminUsername) populateCredentialsTable();
+      if (currentUser === adminUsername) {
+        populateCredentialsTable();
+      }
     });
 }
 
-function saveReservationToFirestore(fieldName, date, time, user) {
+function saveReservationToFirestore(fieldName, date, time, user, role) {
   const docId = `${fieldName}_${date}_${time}_${user}`;
-  return db.collection("reservations").doc(docId).set({
-    field: fieldName, date, time, user
-  });
+  return db.collection("reservations").doc(docId).set({ field: fieldName, date, time, user, role });
 }
 
 function deleteReservationFromFirestore(fieldName, date, time, user) {
@@ -593,14 +614,16 @@ function deleteReservationFromFirestore(fieldName, date, time, user) {
 }
 
 /***********************
- * PRENOTAZIONI / UI
+ *  GESTIONE PRENOTAZIONI & UI
  ***********************/
 function userHasBookingToday() {
   const today = getTodayDate();
   for (let field in reservations) {
     if (reservations[field][today]) {
       for (let slot in reservations[field][today]) {
-        if (reservations[field][today][slot] === currentUser) return true;
+        if (reservations[field][today][slot] === currentUser) {
+          return true;
+        }
       }
     }
   }
@@ -608,91 +631,95 @@ function userHasBookingToday() {
 }
 
 function populateAllFields() {
-  ["Volley1","Volley2","BasketCalcio","Ping-pong"].forEach(fieldName => {
-    const container = document.getElementById(`slots-${fieldName}`);
-    if (!container) return;
-    container.innerHTML = '';
-    const today = getTodayDate();
-    if (!reservations[fieldName][today]) reservations[fieldName][today] = {};
+  ["Volley1", "Volley2", "BasketCalcio", "Ping-pong"].forEach(field => populateFieldSlots(field));
+}
 
-    timeSlots.forEach(slot => {
-      const slotDiv = document.createElement("div");
-      slotDiv.classList.add("slot");
-      const bookedBy = reservations[fieldName][today][slot];
+function populateFieldSlots(fieldName) {
+  const today = getTodayDate();
+  const container = document.getElementById(`slots-${fieldName}`);
+  if (!reservations[fieldName][today]) reservations[fieldName][today] = {};
+  container.innerHTML = '';
 
-      if (bookedBy) {
-        if (bookedBy === currentUser) {
-          slotDiv.classList.add("my-booking");
-          slotDiv.textContent = `${slot} - Prenotato da te`;
-          slotDiv.onclick = () => cancelUserReservation(fieldName, slot);
-        } else {
-          slotDiv.classList.add("unavailable");
-          slotDiv.textContent = `${slot} - Prenotato`;
-        }
+  timeSlots.forEach(slot => {
+    const slotDiv = document.createElement('div');
+    slotDiv.classList.add('slot');
+    const bookedBy = reservations[fieldName][today][slot];
+
+    if (bookedBy) {
+      if (bookedBy === currentUser) {
+        slotDiv.classList.add('my-booking');
+        slotDiv.textContent = `${slot} - Prenotato da Te`;
+        slotDiv.onclick = () => cancelUserReservation(fieldName, slot);
       } else {
-        slotDiv.classList.add("available");
-        slotDiv.textContent = `${slot} - Disponibile`;
-        slotDiv.onclick = () => bookSlot(fieldName, slot);
+        slotDiv.classList.add('unavailable');
+        slotDiv.textContent = `${slot} - Prenotato`;
       }
-      container.appendChild(slotDiv);
-    });
+    } else {
+      slotDiv.classList.add('available');
+      slotDiv.textContent = `${slot} - Disponibile`;
+      slotDiv.onclick = () => bookSlot(fieldName, slot);
+    }
+    container.appendChild(slotDiv);
   });
 }
 
 function bookSlot(fieldName, slot) {
   const today = getTodayDate();
   if (currentUser !== adminUsername && userHasBookingToday()) {
-    showNotification("Hai già una prenotazione oggi.");
+    showNotification('Hai già effettuato una prenotazione per oggi.');
     return;
   }
   if (reservations[fieldName][today][slot]) {
-    showNotification("Questo slot è già prenotato.");
+    showNotification('Questo slot è già prenotato.');
     return;
   }
-  saveReservationToFirestore(fieldName, today, slot, currentUser)
-    .then(() => showNotification(`Prenotazione su ${fieldName} alle ${slot} eseguita!`))
-    .catch(err => {
-      console.error("Errore prenotazione:", err);
-      showNotification("Errore prenotazione.");
-    });
+  db.collection("users").doc(currentUser).get().then(doc => {
+    const role = doc.exists ? doc.data().role : "user";
+    saveReservationToFirestore(fieldName, today, slot, currentUser, role)
+      .then(() => showNotification(`Prenotazione effettuata: ${fieldName} alle ${slot}`))
+      .catch(err => {
+        console.error("Errore durante la prenotazione:", err);
+        showNotification("Errore durante la prenotazione.");
+      });
+  }).catch(err => {
+    console.error("Errore recupero ruolo utente:", err);
+    showNotification("Errore durante la prenotazione.");
+  });
 }
 
 function cancelUserReservation(fieldName, slot) {
   const today = getTodayDate();
   if (reservations[fieldName][today][slot] === currentUser) {
     deleteReservationFromFirestore(fieldName, today, slot, currentUser)
-      .then(() => showNotification("Prenotazione annullata."))
+      .then(() => showNotification(`Prenotazione per ${fieldName} alle ${slot} annullata.`))
       .catch(err => {
-        console.error(err);
-        showNotification("Errore annullamento prenotazione.");
+        console.error("Errore durante la cancellazione:", err);
+        showNotification("Errore durante la cancellazione.");
       });
   } else {
-    showNotification("Non puoi annullare la prenotazione di un altro utente!");
+    showNotification('Non puoi cancellare la prenotazione di un altro utente.');
   }
 }
 
 /***********************
- * ADMIN - PRENOTAZIONI
+ *  FUNZIONI ADMINISTRATIVE
  ***********************/
 function populateAdminTable() {
-  if (currentUser !== adminUsername) return;
   const today = getTodayDate();
-  const tbody = document.getElementById("admin-table");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
+  const tbody = document.getElementById('admin-table');
+  tbody.innerHTML = '';
   for (let field in reservations) {
     if (reservations[field][today]) {
-      for (let slot in reservations[field][today]) {
-        const user = reservations[field][today][slot];
-        const tr = document.createElement("tr");
+      for (let time in reservations[field][today]) {
+        const user = reservations[field][today][time];
+        const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${field}</td>
           <td>${today}</td>
-          <td>${slot}</td>
+          <td>${time}</td>
           <td>${user}</td>
           <td>
-            <button class="cancel-btn" onclick="deleteAdminReservation('${field}','${today}','${slot}','${user}')">
+            <button class="cancel-btn" onclick="deleteAdminReservation('${field}','${today}','${time}','${user}')">
               <i class="fas fa-trash-alt"></i> Elimina
             </button>
           </td>
@@ -703,44 +730,32 @@ function populateAdminTable() {
   }
 }
 
-function deleteAdminReservation(field, date, slot, user) {
-  deleteReservationFromFirestore(field, date, slot, user)
-    .then(() => showNotification(`Prenotazione per ${field} alle ${slot} di ${user} eliminata.`))
+function deleteAdminReservation(fieldName, date, time, user) {
+  deleteReservationFromFirestore(fieldName, date, time, user)
+    .then(() => showNotification(`Prenotazione per ${fieldName} alle ${time} dell'utente ${user} eliminata.`))
     .catch(err => {
-      console.error(err);
-      showNotification("Errore eliminazione prenotazione.");
+      console.error('Errore durante la cancellazione:', err);
+      showNotification("Errore durante la cancellazione.");
     });
 }
 
-/***********************
- * ADMIN - UTENTI
- ***********************/
 function populateCredentialsTable() {
-  if (currentUser !== adminUsername) return;
-  const tbody = document.getElementById("credentials-table");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  // Carichiamo user da Firestore x disabilitato
-  db.collection("users").get().then(snap => {
-    snap.forEach(doc => {
+  const tbody = document.getElementById('credentials-table');
+  tbody.innerHTML = '';
+  db.collection("users").get().then(snapshot => {
+    snapshot.forEach(doc => {
       const data = doc.data();
       const username = doc.id;
-      const pass = staticUsers[username] || "N/A";
-      const disabled = data.disabled || false;
-
-      const tr = document.createElement("tr");
+      const password = staticUsers[username] || "N/A";
+      const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${username}</td>
-        <td>${pass}</td>
-        <td>${disabled ? "Disabilitato" : "Attivo"}</td>
+        <td>${password}</td>
+        <td>${data.disabled ? 'Disabilitato' : 'Attivo'}</td>
         <td>
-          <button onclick="toggleUserStatus('${username}', ${disabled})">
-            <i class="fas ${disabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
-            ${disabled ? 'Attiva' : 'Disabilita'}
-          </button>
-          <button onclick="updateUserPassword('${username}')">
-            <i class="fas fa-edit"></i> Modifica Password
+          <button onclick="toggleUserStatus('${username}', ${data.disabled})">
+            <i class="fas ${data.disabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+            ${data.disabled ? 'Attiva' : 'Disattiva'}
           </button>
         </td>
       `;
@@ -749,55 +764,76 @@ function populateCredentialsTable() {
   }).catch(err => console.error(err));
 }
 
-window.toggleUserStatus = function(username, isDisabled) {
-  const newStatus = !isDisabled;
+function toggleUserStatus(username, currentDisabled) {
+  const newStatus = !currentDisabled;
   db.collection("users").doc(username).set({ disabled: newStatus }, { merge: true })
     .then(() => {
-      showNotification(`Utente ${username} ${newStatus ? 'disabilitato' : 'attivato'}.`);
       populateCredentialsTable();
+      showNotification(`Utente ${username} ${newStatus ? 'disabilitato' : 'attivato'}.`);
     })
     .catch(err => {
       console.error(err);
-      showNotification("Errore aggiornamento stato user.");
+      showNotification("Errore durante l'aggiornamento dello stato.");
     });
-};
-
-window.updateUserPassword = function(username) {
-  const newPass = prompt("Nuova password per " + username + ":");
-  if (!newPass) return;
-
-  staticUsers[username] = newPass;
-
-  if (username === adminUsername) {
-    adminPassword = newPass;
-  }
-
-  // Salviamo su Firestore (opzionale)
-  db.collection("users").doc(username).set({ password: newPass }, { merge: true })
-    .then(() => {
-      showNotification(`Password aggiornata per ${username}.`);
-      populateCredentialsTable();
-    })
-    .catch(err => {
-      console.error("Errore update password:", err);
-      showNotification("Errore durante l'aggiornamento password.");
-    });
-};
+}
 
 /***********************
- * ADMIN - IMMAGINI
+ *  SEZIONE NOTE ADMIN
+ ***********************/
+
+// 1) Carichiamo le note in real time
+function loadAdminNotesRealtime() {
+  db.collection("admin").doc("notes").onSnapshot(doc => {
+    if (doc.exists) {
+      const noteText = doc.data().text || "";
+      // Aggiorniamo il <p> visibile a tutti
+      document.getElementById("notes-content").textContent = noteText;
+
+      // Se l'utente è admin, aggiorniamo la textarea
+      if (currentUser === adminUsername) {
+        const adminNotes = document.getElementById("admin-notes");
+        adminNotes.value = noteText;
+      }
+    } else {
+      // Se non esiste, creiamo un doc vuoto
+      db.collection("admin").doc("notes").set({ text: "" });
+      document.getElementById("notes-content").textContent = "";
+    }
+  });
+}
+
+// 2) Salvataggio automatico appena l'admin digita
+function saveAdminNotes() {
+  if (currentUser !== adminUsername) {
+    showNotification("Non hai i permessi per modificare le note.");
+    return;
+  }
+  const text = document.getElementById("admin-notes").value;
+  db.collection("admin").doc("notes").set({ text })
+    .catch(err => {
+      console.error("Errore salvataggio note:", err);
+      showNotification("Errore durante il salvataggio delle note.");
+    });
+}
+
+/***********************
+ *  SEZIONE IMMAGINI ADMIN (max 10)
  ***********************/
 function loadAdminImagesRealtime() {
-  db.collection("admin").doc("images").onSnapshot(docSnap => {
+  db.collection("admin").doc("images").onSnapshot(doc => {
     const container = document.getElementById("login-images-container");
-    if (!container) return;
     container.innerHTML = "";
 
-    if (docSnap.exists) {
-      const data = docSnap.data();
+    if (doc.exists) {
+      const data = doc.data();
+
       for (let i = 1; i <= 10; i++) {
-        const url = data[`image${i}URL`] || "";
-        const link = data[`image${i}Link`] || "";
+        const urlField = `image${i}URL`;
+        const linkField = `image${i}Link`;
+
+        const url = data[urlField] || "";
+        const link = data[linkField] || "";
+
         if (url) {
           const a = document.createElement("a");
           a.href = link || "#";
@@ -805,15 +841,12 @@ function loadAdminImagesRealtime() {
           const img = document.createElement("img");
           img.src = url;
           img.alt = `Immagine ${i}`;
-          img.style.width = "80px";
-          img.style.border = "2px solid var(--color-primary)";
-          img.style.borderRadius = "8px";
-          img.style.margin = "5px";
           a.appendChild(img);
           container.appendChild(a);
         }
       }
 
+      // Se admin, riempiamo i campi input
       if (currentUser === adminUsername) {
         for (let i = 1; i <= 10; i++) {
           document.getElementById(`image${i}URL`).value = data[`image${i}URL`] || "";
@@ -821,19 +854,20 @@ function loadAdminImagesRealtime() {
         }
       }
     } else {
-      const payload = {};
+      // Creiamo il documento images se non esiste
+      const initialData = {};
       for (let i = 1; i <= 10; i++) {
-        payload[`image${i}URL`] = "";
-        payload[`image${i}Link`] = "";
+        initialData[`image${i}URL`] = "";
+        initialData[`image${i}Link`] = "";
       }
-      db.collection("admin").doc("images").set(payload);
+      db.collection("admin").doc("images").set(initialData);
     }
   });
 }
 
-window.saveAdminImages = function() {
+function saveAdminImages() {
   if (currentUser !== adminUsername) {
-    showNotification("Non hai i permessi per modificare le immagini!");
+    showNotification("Non hai i permessi per modificare le immagini.");
     return;
   }
   const payload = {};
@@ -842,35 +876,64 @@ window.saveAdminImages = function() {
     payload[`image${i}Link`] = document.getElementById(`image${i}Link`).value.trim();
   }
   db.collection("admin").doc("images").set(payload)
-    .then(() => showNotification("Immagini salvate con successo!"))
+    .then(() => {
+      showNotification("Immagini salvate con successo.");
+    })
     .catch(err => {
       console.error("Errore salvataggio immagini:", err);
-      showNotification("Errore salvataggio immagini.");
+      showNotification("Errore durante il salvataggio delle immagini.");
     });
-};
+}
 
 /***********************
- * RESET QUOTIDIANO
+ *  FUNZIONI VARIE
  ***********************/
+function toggleSections(isLoggedIn) {
+  document.getElementById('login-area').style.display = isLoggedIn ? 'none' : 'flex';
+  document.getElementById('app-area').style.display = isLoggedIn ? 'flex' : 'none';
+}
+
+function toggleAdminSection() {
+  const adminSection = document.getElementById('admin-area');
+  adminSection.style.display = (currentUser === adminUsername) ? 'block' : 'none';
+
+  // Mostra/occulta la textarea delle note riservata all'admin
+  const adminNotes = document.getElementById('admin-notes');
+  if (currentUser === adminUsername) {
+    adminNotes.style.display = 'block';
+    // Aggiunge l'evento che salva automaticamente mentre l'admin scrive:
+    adminNotes.addEventListener('input', saveAdminNotes);
+  } else {
+    adminNotes.style.display = 'none';
+    adminNotes.removeEventListener('input', saveAdminNotes);
+  }
+}
+
+/**
+ * Il reset quotidiano (dopo le 10) NON elimina le note,
+ * ma solo le prenotazioni degli utenti normali.
+ */
 function checkAndResetAfterTen() {
-  const lastResetDate = localStorage.getItem("lastResetDate");
+  const lastResetDate = localStorage.getItem('lastResetDate');
   const today = getTodayDate();
   const now = new Date();
+
   if (lastResetDate !== today && now.getHours() >= 10) {
     resetAllReservations();
-    localStorage.setItem("lastResetDate", today);
+    localStorage.setItem('lastResetDate', today);
   }
 }
 
 function resetAllReservations() {
   const today = getTodayDate();
   db.collection("reservations")
-    .where("date","==",today)
+    .where("date", "==", today)
     .get()
-    .then(snap => {
+    .then(snapshot => {
       const batch = db.batch();
-      snap.forEach(doc => {
+      snapshot.forEach(doc => {
         const data = doc.data();
+        // Non eliminiamo prenotazioni dell'admin
         if (data.user !== adminUsername) {
           batch.delete(doc.ref);
         }
@@ -878,11 +941,22 @@ function resetAllReservations() {
       return batch.commit();
     })
     .then(() => {
-      showNotification("Prenotazioni resettate per il nuovo giorno (admin escluso).");
+      showNotification("Prenotazioni resettate per il nuovo giorno.");
       loadReservationsFromFirestore();
     })
     .catch(err => {
-      console.error("Errore resetAllReservations:", err);
-      showNotification("Errore reset prenotazioni.");
+      console.error("Errore durante il reset:", err);
+      showNotification("Errore durante il reset delle prenotazioni.");
     });
 }
+
+/***********************
+ *  INIZIALIZZAZIONE
+ ***********************/
+document.addEventListener('DOMContentLoaded', () => {
+  // Inizialmente, l'area app è nascosta, si vede solo il login
+  toggleSections(false);
+
+  // Carichiamo subito le immagini (anche per il login)
+  loadAdminImagesRealtime();
+});

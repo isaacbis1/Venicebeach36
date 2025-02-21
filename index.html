@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Prenotazione Campi</title>
 
-  <!-- Font Awesome -->
+  <!-- Font Awesome per le icone -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -22,38 +22,34 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
-  <!-- Sezione Login -->
+  <!-- Sezione Login con 3 scelte: Admin, Accedi, Registrati -->
   <div id="login-area">
     <div class="login-container">
       <div class="login-form" id="login-options">
         <h1>Benvenuto</h1>
-        <p>Scegli un'opzione per entrare:</p>
+        <p>Scegli un'opzione:</p>
         <button onclick="loginAsAdmin()">Admin</button>
-        <button onclick="showUserLoginForm()">Accedi (User)</button>
+        <button onclick="showUserLoginForm()">Accedi</button>
         <button onclick="showRegistrationForm()">Registrati</button>
       </div>
 
       <!-- FORM LOGIN USER (dictionary) -->
       <div class="login-form" id="user-login-form" style="display: none;">
-        <h2>Login Utente</h2>
-        <p>Inserisci username e password (dictionary).</p>
+        <h1>Login Utente</h1>
+        <p>Inserisci username e password (dizionario)</p>
         <input type="text" id="user-username" placeholder="Username" />
         <input type="password" id="user-password" placeholder="Password" />
-        <button onclick="userLoginDictionary()">
-          <i class="fas fa-sign-in-alt"></i> Accedi
-        </button>
+        <button onclick="userLoginDictionary()"><i class="fas fa-sign-in-alt"></i> Accedi</button>
       </div>
 
       <!-- FORM REGISTRAZIONE -->
       <div class="login-form" id="registration-form" style="display: none;">
-        <h2>Registrazione</h2>
-        <p>Inserisci email, telefono e password.</p>
-        <input type="text" id="reg-email" placeholder="Email" />
-        <input type="text" id="reg-phone" placeholder="Telefono" />
-        <input type="password" id="reg-password" placeholder="Password" />
-        <button onclick="registerNewUser()">
-          <i class="fas fa-user-plus"></i> Registrati
-        </button>
+        <h1>Registrazione</h1>
+        <p>Inserisci email, telefono e password</p>
+        <input type="text" id="reg-email" placeholder="Email">
+        <input type="text" id="reg-phone" placeholder="Telefono">
+        <input type="password" id="reg-password" placeholder="Password">
+        <button onclick="registerNewUser()"><i class="fas fa-user-plus"></i> Registrati</button>
       </div>
     </div>
   </div>
@@ -61,14 +57,11 @@
   <!-- Sezione Applicazione -->
   <div id="app-area">
     <header>
-      <a href="#" class="logout" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </a>
+      <a href="#" class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
       <h1>Prenotazione Campi</h1>
     </header>
 
     <main>
-      <!-- CAMPIONI 2x2 di campi -->
       <div class="fields-container">
         <div class="field-box" id="field-Volley1">
           <h3>Volley1</h3>
@@ -181,9 +174,7 @@
             <input type="text" id="image10Link">
           </div>
 
-          <button onclick="saveAdminImages()">
-            <i class="fas fa-save"></i> Salva Immagini
-          </button>
+          <button onclick="saveAdminImages()"><i class="fas fa-save"></i> Salva Immagini</button>
         </div>
 
         <h2>Elenco Registrazioni</h2>
@@ -209,7 +200,7 @@
   <!-- Notifiche -->
   <div id="notification-container"></div>
 
-  <!-- Codice JS -->
+  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>

@@ -114,17 +114,17 @@ main {
   padding: 20px;
 }
 
-/* RIGA IMMAGINI */
+/* RIGA IMMAGINI DEL LOGIN */
 #login-images-container {
   display: flex;
-  flex-wrap: wrap;        /* Se superano lo spazio vanno a capo */
-  justify-content: center;/* Centra orizzontalmente */
-  gap: 1rem;              /* Distanza fra di loro */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 #login-images-container a img {
-  max-width: 80px;        /* Dimensione massima di ogni immagine */
+  max-width: 80px;
   border: 2px solid var(--color-primary);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -214,6 +214,7 @@ main {
   white-space: pre-wrap; /* conserva i ritorni a capo */
 }
 
+/* Textarea delle note, di default nascosta (visibile solo a admin via JS) */
 #admin-notes {
   width: 100%;
   font-size: 1rem;
@@ -223,33 +224,13 @@ main {
   resize: vertical;
   margin-bottom: 10px;
   transition: border-color 0.3s ease;
-  display: none; /* Nascosto di default, lo mostreremo per l'admin */
+  display: none; /* Nascosto di default, lo mostriamo solo all'admin */
 }
 
 #admin-notes:focus {
   border-color: var(--color-accent);
   outline: none;
 }
-
-#save-notes-btn {
-  background: var(--color-secondary);
-  color: var(--color-primary);
-  border: none;
-  border-radius: 6px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  display: none; /* Nascosto di default, lo mostreremo per l'admin */
-}
-
-#save-notes-btn:hover {
-  background: var(--color-accent);
-  transform: translateY(-2px);
-}
-#admin-notes {
-  display: none;
-}
-
 
 /* Sezione Campi - Grid 2x2 */
 .fields-container {
@@ -345,7 +326,7 @@ main {
 
 /* Sezione Admin */
 .admin {
-  display: none;
+  display: none; /* Nascosta se non sei admin */
   margin-top: 40px;
   background: var(--color-white);
   padding: 25px;
@@ -490,8 +471,8 @@ footer p {
 @media (max-width: 768px) {
   #login-area {
     padding: 20px;
-    box-shadow: none; /* Rimuove l'effetto hover su mobile */
-    transform: none;  /* Evita movimenti */
+    box-shadow: none;
+    transform: none;
   }
   .login-container {
     max-width: 100%;
@@ -508,7 +489,7 @@ footer p {
     font-size: 0.85rem;
   }
   .fields-container {
-    grid-template-columns: 1fr; /* Rende i campi a colonna singola */
+    grid-template-columns: 1fr;
   }
   .slot-info {
     flex-direction: column;

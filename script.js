@@ -1,4 +1,21 @@
 /***********************
+ *  DISABILITA TASTO DESTRO E SCORCIATOIE
+ ***********************/
+document.addEventListener('contextmenu', (event) => event.preventDefault());
+document.addEventListener('keydown', (event) => {
+  if (
+    event.key === 'F12' ||
+    (event.ctrlKey && event.shiftKey && event.key === 'I') ||
+    (event.ctrlKey && event.key === 'U') ||
+    (event.ctrlKey && event.key === 'S') ||
+    (event.ctrlKey && event.key === 'C')
+  ) {
+    event.preventDefault();
+    return false;
+  }
+});
+
+/***********************
  *  CONFIGURAZIONE FIREBASE
  ***********************/
 const firebaseConfig = {
@@ -10,7 +27,6 @@ const firebaseConfig = {
   appId: "1:985324700492:web:b8cb569e83bb2e24ed85e9",
   measurementId: "G-3W0ZKB4S5Q"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -21,11 +37,9 @@ let currentUser = null;
 const adminUsername = "admin";
 const adminPassword = "passwordAdmin";
 
-// Hardcoded static users per 200 utenti
+/* Hardcoded static users (1..200) + admin */
 const staticUsers = {
-
-
- "admin": adminPassword,
+"admin": adminPassword,
 
   "user001": "jcne",
 
@@ -430,7 +444,6 @@ const staticUsers = {
 };
 
 
-
 const timeSlots = [
   "11:00", "11:45",
   "12:30", "13:15",
@@ -495,10 +508,14 @@ function authenticateUser(username) {
   populateCredentialsTable();
   checkAndResetAfterTen();
   showNotification(`Benvenuto, ${username}!`);
+
+  // Carica le immagini in tempo reale
+  loadAdminImagesRealtime();
 }
 
 function authenticateStaticUser(username, password) {
   if (staticUsers[username] && staticUsers[username] === password) {
+    // Controlliamo se l'utente è disabilitato in Firestore
     db.collection("users").doc(username).get().then(doc => {
       const disabled = doc.exists ? doc.data().disabled : false;
       if (disabled) {
@@ -511,6 +528,9 @@ function authenticateStaticUser(username, password) {
       loadReservationsFromFirestore();
       checkAndResetAfterTen();
       showNotification(`Benvenuto, ${username}!`);
+
+      // Carica le immagini in tempo reale (anche per user)
+      loadAdminImagesRealtime();
     }).catch(err => {
       console.error(err);
       showNotification("Errore durante il login.");
@@ -586,7 +606,9 @@ function userHasBookingToday() {
   for (let field in reservations) {
     if (reservations[field][today]) {
       for (let slot in reservations[field][today]) {
-        if (reservations[field][today][slot] === currentUser) return true;
+        if (reservations[field][today][slot] === currentUser) {
+          return true;
+        }
       }
     }
   }
@@ -600,6 +622,7 @@ function populateAllFields() {
 function populateFieldSlots(fieldName) {
   const today = getTodayDate();
   const container = document.getElementById(`slots-${fieldName}`);
+  if (!container) return;
   if (!reservations[fieldName][today]) reservations[fieldName][today] = {};
   container.innerHTML = '';
 
@@ -636,6 +659,7 @@ function bookSlot(fieldName, slot) {
     showNotification('Questo slot è già prenotato.');
     return;
   }
+  // Se esistesse un doc "users/<username>" con un "role"
   db.collection("users").doc(currentUser).get().then(doc => {
     const role = doc.exists ? doc.data().role : "user";
     saveReservationToFirestore(fieldName, today, slot, currentUser, role)
@@ -665,11 +689,12 @@ function cancelUserReservation(fieldName, slot) {
 }
 
 /***********************
- *  FUNZIONI ADMINISTRATIVE
+ *  SEZIONE ADMIN - PRENOTAZIONI
  ***********************/
 function populateAdminTable() {
   const today = getTodayDate();
   const tbody = document.getElementById('admin-table');
+  if (!tbody) return;
   tbody.innerHTML = '';
   for (let field in reservations) {
     if (reservations[field][today]) {
@@ -681,8 +706,11 @@ function populateAdminTable() {
           <td>${today}</td>
           <td>${time}</td>
           <td>${user}</td>
-          <td><button class="cancel-btn" onclick="deleteAdminReservation('${field}','${today}','${time}','${user}')">
-            <i class="fas fa-trash-alt"></i> Elimina</button></td>
+          <td>
+            <button class="cancel-btn" onclick="deleteAdminReservation('${field}','${today}','${time}','${user}')">
+              <i class="fas fa-trash-alt"></i> Elimina
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       }
@@ -699,30 +727,47 @@ function deleteAdminReservation(fieldName, date, time, user) {
     });
 }
 
+/***********************
+ *  SEZIONE ADMIN - GESTIONE UTENTI
+ ***********************/
 function populateCredentialsTable() {
   const tbody = document.getElementById('credentials-table');
+  if (!tbody) return;
   tbody.innerHTML = '';
+
+  // In questo esempio, assumiamo di avere i dati "disabled" in Firestore,
+  // ma la password la prendiamo da staticUsers (in chiaro).
   db.collection("users").get().then(snapshot => {
     snapshot.forEach(doc => {
       const data = doc.data();
       const username = doc.id;
       const password = staticUsers[username] || "N/A";
+      const disabled = data.disabled ? true : false;
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${username}</td>
         <td>${password}</td>
-        <td>${data.disabled ? 'Disabilitato' : 'Attivo'}</td>
-        <td><button onclick="toggleUserStatus('${username}', ${data.disabled})">
-          <i class="fas ${data.disabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> ${data.disabled ? 'Attiva' : 'Disattiva'}</button></td>
+        <td>${disabled ? 'Disabilitato' : 'Attivo'}</td>
+        <td>
+          <button onclick="toggleUserStatus('${username}', ${disabled})">
+            <i class="fas ${disabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+            ${disabled ? 'Attiva' : 'Disattiva'}
+          </button>
+          <button onclick="updateUserPassword('${username}')">
+            <i class="fas fa-edit"></i> Modifica Password
+          </button>
+        </td>
       `;
       tbody.appendChild(tr);
     });
   }).catch(err => console.error(err));
 }
 
+// Attiva/Disattiva
 function toggleUserStatus(username, currentDisabled) {
   const newStatus = !currentDisabled;
-  db.collection("users").doc(username).update({ disabled: newStatus })
+  db.collection("users").doc(username).set({ disabled: newStatus }, { merge: true })
     .then(() => {
       populateCredentialsTable();
       showNotification(`Utente ${username} ${newStatus ? 'disabilitato' : 'attivato'}.`);
@@ -730,6 +775,107 @@ function toggleUserStatus(username, currentDisabled) {
     .catch(err => {
       console.error(err);
       showNotification("Errore durante l'aggiornamento dello stato.");
+    });
+}
+
+// Modifica Password
+function updateUserPassword(username) {
+  const newPass = prompt("Inserisci la nuova password per " + username + ":");
+  if (!newPass) return;
+  // Aggiorniamo la password in staticUsers
+  if (!staticUsers[username]) {
+    showNotification("L'utente non esiste in staticUsers.");
+    return;
+  }
+  staticUsers[username] = newPass;
+  // Se vuoi salvare la password anche in Firestore, potresti fare:
+  db.collection("users").doc(username).set({ password: newPass }, { merge: true })
+    .then(() => {
+      showNotification(`Password aggiornata per ${username}`);
+      populateCredentialsTable(); // Ricarica la tabella
+      // Se stiamo modificando la password di "admin":
+      if (username === "admin") {
+        // Aggiorniamo adminPassword
+        // (così al prossimo login con user=admin, avrà la nuova pass)
+        // Basta riassegnare a adminPassword:
+        if (username === adminUsername) {
+          window.adminPassword = newPass;
+        }
+      }
+    })
+    .catch(err => {
+      console.error("Errore update password in Firestore:", err);
+      showNotification("Errore durante l'aggiornamento password.");
+    });
+}
+
+/***********************
+ *  SEZIONE ADMIN - GESTIONE IMMAGINI (max 10)
+ ***********************/
+// Caricamento in tempo reale
+function loadAdminImagesRealtime() {
+  db.collection("admin").doc("images").onSnapshot(docSnap => {
+    const container = document.getElementById("login-images-container");
+    if (!container) return;
+    container.innerHTML = ""; // Svuotiamo prima
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      for (let i = 1; i <= 10; i++) {
+        const urlField = `image${i}URL`;
+        const linkField = `image${i}Link`;
+        const url = data[urlField] || "";
+        const link = data[linkField] || "";
+
+        if (url) {
+          const a = document.createElement("a");
+          a.href = link || "#";
+          a.target = "_blank";
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = `Immagine ${i}`;
+          img.style.width = "80px";   // dimensione a piacere
+          img.style.border = "2px solid var(--color-primary)";
+          img.style.borderRadius = "8px";
+          a.appendChild(img);
+          container.appendChild(a);
+        }
+      }
+
+      // Se utente è admin, popola i campi
+      if (currentUser === adminUsername) {
+        for (let i = 1; i <= 10; i++) {
+          document.getElementById(`image${i}URL`).value = data[`image${i}URL`] || "";
+          document.getElementById(`image${i}Link`).value = data[`image${i}Link`] || "";
+        }
+      }
+    } else {
+      // Se non esiste doc "images", creiamo
+      const initialPayload = {};
+      for (let i = 1; i <= 10; i++) {
+        initialPayload[`image${i}URL`] = "";
+        initialPayload[`image${i}Link`] = "";
+      }
+      db.collection("admin").doc("images").set(initialPayload);
+    }
+  });
+}
+
+// Salvataggio
+function saveAdminImages() {
+  if (currentUser !== adminUsername) {
+    showNotification("Non hai i permessi per modificare le immagini.");
+    return;
+  }
+  const payload = {};
+  for (let i = 1; i <= 10; i++) {
+    payload[`image${i}URL`] = document.getElementById(`image${i}URL`).value.trim();
+    payload[`image${i}Link`] = document.getElementById(`image${i}Link`).value.trim();
+  }
+  db.collection("admin").doc("images").set(payload)
+    .then(() => showNotification("Immagini salvate con successo."))
+    .catch(err => {
+      console.error("Errore salvataggio immagini:", err);
+      showNotification("Errore durante il salvataggio delle immagini.");
     });
 }
 
@@ -743,12 +889,11 @@ function toggleSections(isLoggedIn) {
 
 function toggleAdminSection() {
   const adminSection = document.getElementById('admin-area');
+  if (!adminSection) return;
   adminSection.style.display = (currentUser === adminUsername) ? 'block' : 'none';
 }
 
-/* Modifica del reset delle prenotazioni:
-   - Ora il reset quotidiano non elimina le prenotazioni effettuate dall'admin.
-*/
+/* Reset quotidiano dopo le 10 (no prenotazioni admin) */
 function checkAndResetAfterTen() {
   const lastResetDate = localStorage.getItem('lastResetDate');
   const today = getTodayDate();
@@ -764,11 +909,11 @@ function resetAllReservations() {
   db.collection("reservations")
     .where("date", "==", today)
     .get()
-    .then(snapshot => {
+    .then(snap => {
       const batch = db.batch();
-      snapshot.forEach(doc => {
+      snap.forEach(doc => {
         const data = doc.data();
-        // Non eliminare le prenotazioni effettuate dall'admin
+        // Non cancellare se user=admin
         if (data.user !== adminUsername) {
           batch.delete(doc.ref);
         }
@@ -789,6 +934,9 @@ function resetAllReservations() {
  *  INIZIALIZZAZIONE
  ***********************/
 document.addEventListener('DOMContentLoaded', () => {
-  populateAllFields();
-  listenRealtimeForToday();
+  // Mostriamo la sezione login, nascondiamo app-area
+  toggleSections(false);
+
+  // Carichiamo subito le immagini (anche se non loggato)
+  loadAdminImagesRealtime();
 });

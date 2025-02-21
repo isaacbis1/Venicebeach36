@@ -1,391 +1,995 @@
-/* Reset di base */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Import del font Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-/* Variabili CSS per la palette di colori */
-:root {
-  --color-primary: #FF8C00; /* Arancione scuro */
-  --color-secondary: #FFD700; /* Giallo oro */
-  --color-accent: #FF4500; /* Arancione rosso */
-  --color-bg: #FFF8E1; /* Crema chiaro */
-  --color-text: #333333;
-  --color-white: #FFFFFF;
-  --color-overlay: rgba(255, 255, 255, 0.1);
-}
-
-/* Stile Body */
-body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-secondary) 100%);
-  color: var(--color-text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  transition: background 0.3s ease;
-  -webkit-touch-callout: none;
-}
-
-/* Header */
-header {
-  background: var(--color-primary);
-  color: var(--color-white);
-  text-align: center;
-  padding: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-top: 10px;
-}
-
-.logout {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  text-decoration: none;
-  color: var(--color-white);
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.logout:hover {
-  color: var(--color-secondary);
-}
-
-/* Main */
-main {
-  flex: 1;
-  padding: 30px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* Sezione Login */
-#login-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 40px 30px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#login-area:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-}
-
-.login-container {
-  width: 100%;
-  max-width: 400px;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.login-form h1 {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
-  color: var(--color-primary);
-}
-
-.login-form p {
-  font-size: 1rem;
-  margin-bottom: 25px;
-  line-height: 1.5;
-}
-
-.login-form input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  font-size: 1rem;
-  border: 2px solid var(--color-primary);
-  border-radius: 6px;
-  transition: border-color 0.3s ease;
-}
-
-.login-form input:focus {
-  border-color: var(--color-secondary);
-  outline: none;
-}
-
-.login-form button {
-  width: 100%;
-  padding: 12px;
-  background: var(--color-secondary);
-  color: var(--color-primary);
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.login-form button:hover {
-  background: var(--color-accent);
-  transform: translateY(-2px);
-}
-
-/* Sezione Campi */
-.fields-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-top: 30px;
-}
-
-.field-box {
-  flex: 1 1 300px;
-  background: var(--color-white);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.field-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-
-.field-box h3 {
-  color: var(--color-primary);
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.slot-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.slot {
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-align: center;
-  transition: background 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
-}
-
-.available {
-  background-color: #FFF3E0;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-}
-.available:hover {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-  transform: scale(1.05);
-}
-.unavailable {
-  background-color: #FFCCBC;
-  color: #FF5722;
-  border: 2px solid #FF5722;
-  cursor: not-allowed;
-}
-.my-booking {
-  background-color: #FFF9C4;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-}
-.my-booking:hover {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-  transform: scale(1.05);
-}
-
-.cancel-btn {
-  margin-top: 15px;
-  background: #FF5252;
-  color: #FFFFFF;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-.cancel-btn:hover {
-  background: #FF1744;
-  transform: translateY(-2px);
-}
-
-/* Sezione Admin */
-.admin {
-  display: none;
-  margin-top: 40px;
-  background: var(--color-white);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.admin:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.admin h2 {
-  color: var(--color-primary);
-  margin-bottom: 20px;
-  font-size: 2rem;
-  font-weight: 600;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-table, th, td {
-  border: 1px solid #EEEEEE;
-}
-th, td {
-  padding: 12px;
-  text-align: left;
-  font-size: 1rem;
-}
-th {
-  background-color: var(--color-secondary);
-  color: var(--color-primary);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-tbody tr:nth-child(even) {
-  background-color: #FFFDE7;
-}
-tbody tr:hover {
-  background-color: #FFF9C4;
-}
-
-button {
-  padding: 6px 10px;
-  background: var(--color-secondary);
-  color: var(--color-primary);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-button:hover {
-  background: var(--color-accent);
-  transform: translateY(-2px);
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  background: var(--color-primary);
-  color: var(--color-white);
-  padding: 15px;
-  margin-top: auto;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-}
-footer p {
-  font-size: 1rem;
-}
-
-/* Notifiche */
-#notification-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1001;
-}
-.notification {
-  background-color: var(--color-secondary);
-  color: var(--color-primary);
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-@keyframes fadein {
-  from { opacity: 0; right: 0; }
-  to { opacity: 1; right: 20px; }
-}
-@keyframes fadeout {
-  from { opacity: 1; right: 20px; }
-  to { opacity: 0; right: 0; }
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  main {
-    padding: 30px 15px;
+/***********************
+ * DISABILITA TASTO DESTRO E SCORCIATOIE
+ ***********************/
+document.addEventListener('contextmenu', (evt) => evt.preventDefault());
+document.addEventListener('keydown', (evt) => {
+  if (
+    evt.key === 'F12' ||
+    (evt.ctrlKey && evt.shiftKey && evt.key === 'I') ||
+    (evt.ctrlKey && evt.key === 'U') ||
+    (evt.ctrlKey && evt.key === 'S') ||
+    (evt.ctrlKey && evt.key === 'C')
+  ) {
+    evt.preventDefault();
+    return false;
   }
-  .fields-container {
-    gap: 20px;
+});
+
+/***********************
+ * CONFIGURAZIONE FIREBASE
+ ***********************/
+const firebaseConfig = {
+  apiKey: "AIzaSyBivERuJvrO947t2Idv8DM3gZyfuqEQahw",
+  authDomain: "campi-414b4.firebaseapp.com",
+  projectId: "campi-414b4",
+  storageBucket: "campi-414b4.firebasestorage.app",
+  messagingSenderId: "985324700492",
+  appId: "1:985324700492:web:b8cb569e83bb2e24ed85e9",
+  measurementId: "G-3W0ZKB4S5Q"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/***********************
+ * VARIABILI GLOBALI
+ ***********************/
+let currentUser = null;
+const adminUsername = "admin";
+let adminPassword = "passwordAdmin"; // Se la modifichiamo da admin
+
+/* Dizionario di user1..user200 e 'admin' */
+const staticUsers = {
+"admin": adminPassword,
+
+  "user001": "jcne",
+
+  "user002": "hoyw",
+
+  "user003": "xqal",
+
+  "user004": "ekvn",
+
+  "user005": "msyo",
+
+  "user006": "zfil",
+
+  "user007": "rbte",
+
+  "user008": "pwxa",
+
+  "user009": "nkcv",
+
+  "user010": "gdmu",
+
+  "user011": "lxqp",
+
+  "user012": "tefz",
+
+  "user013": "vukn",
+
+  "user014": "ywqc",
+
+  "user015": "joax",
+
+  "user016": "heml",
+
+  "user017": "dpuz",
+
+  "user018": "scnv",
+
+  "user019": "ytak",
+
+  "user020": "fgxr",
+
+  "user021": "qvlm",
+
+  "user022": "unyt",
+
+  "user023": "bzio",
+
+  "user024": "wpkd",
+
+  "user025": "oyfj",
+
+  "user026": "mevl",
+
+  "user027": "akpf",
+
+  "user028": "cznx",
+
+  "user029": "bluo",
+
+  "user030": "xhvt",
+
+  "user031": "jcrw",
+
+  "user032": "pkaz",
+
+  "user033": "twne",
+
+  "user034": "dqmh",
+
+  "user035": "vsjo",
+
+  "user036": "nzfk",
+
+  "user037": "grya",
+
+  "user038": "ojbw",
+
+  "user039": "lmqd",
+
+  "user040": "ykvr",
+
+  "user041": "cnhx",
+
+  "user042": "fqzm",
+
+  "user043": "vlpu",
+
+  "user044": "eznf",
+
+  "user045": "tjya",
+
+  "user046": "owrb",
+
+  "user047": "mnqd",
+
+  "user048": "kzwp",
+
+  "user049": "prfv",
+
+  "user050": "hxla",
+
+  "user051": "dyuk",
+
+  "user052": "bzcn",
+
+  "user053": "lxem",
+
+  "user054": "vqwd",
+
+  "user055": "ajok",
+
+  "user056": "pcmn",
+
+  "user057": "nzhl",
+
+  "user058": "tfkr",
+
+  "user059": "kmyv",
+
+  "user060": "owfz",
+
+  "user061": "rljq",
+
+  "user062": "vewu",
+
+  "user063": "ytai",
+
+  "user064": "qlkr",
+
+  "user065": "xpdn",
+
+  "user066": "mvzu",
+
+  "user067": "ojwr",
+
+  "user068": "teln",
+
+  "user069": "fqzy",
+
+  "user070": "blmc",
+
+  "user071": "hrtk",
+
+  "user072": "dngv",
+
+  "user073": "paum",
+
+  "user074": "wvkc",
+
+  "user075": "xroa",
+
+  "user076": "jlwn",
+
+  "user077": "eykv",
+
+  "user078": "czpj",
+
+  "user079": "oltd",
+
+  "user080": "urfb",
+
+  "user081": "nvce",
+
+  "user082": "jxow",
+
+  "user083": "bqyn",
+
+  "user084": "zmpa",
+
+  "user085": "wfuz",
+
+  "user086": "oejd",
+
+  "user087": "hvri",
+
+  "user088": "plnc",
+
+  "user089": "dtwr",
+
+  "user090": "qvjm",
+
+  "user091": "zcyu",
+
+  "user092": "frbl",
+
+  "user093": "ektm",
+
+  "user094": "wvpx",
+
+  "user095": "ytlm",
+
+  "user096": "oqfi",
+
+  "user097": "vjwb",
+
+  "user098": "akxe",
+
+  "user099": "lmvt",
+
+  "user100": "czqo",
+
+  "user101": "ewnh",
+
+  "user102": "obml",
+
+  "user103": "pxkt",
+
+  "user104": "vujr",
+
+  "user105": "ydlf",
+
+  "user106": "hnvz",
+
+  "user107": "ekow",
+
+  "user108": "wrfp",
+
+  "user109": "xqtn",
+
+  "user110": "ovmu",
+
+  "user111": "jaly",
+
+  "user112": "pcnz",
+
+  "user113": "fwzr",
+
+  "user114": "gtox",
+
+  "user115": "dhqb",
+
+  "user116": "rmvl",
+
+  "user117": "kyuo",
+
+  "user118": "epcd",
+
+  "user119": "ojkf",
+
+  "user120": "alnr",
+
+  "user121": "tzvq",
+
+  "user122": "fjwk",
+
+  "user123": "xqoa",
+
+  "user124": "dzrm",
+
+  "user125": "wlfp",
+
+  "user126": "vknc",
+
+  "user127": "bzqh",
+
+  "user128": "amol",
+
+  "user129": "fvrj",
+
+  "user130": "kdzx",
+
+  "user131": "njcv",
+
+  "user132": "xyal",
+
+  "user133": "tpdz",
+
+  "user134": "rfwb",
+
+  "user135": "vlio",
+
+  "user136": "ekqu",
+
+  "user137": "jyzf",
+
+  "user138": "woan",
+
+  "user139": "lvpk",
+
+  "user140": "ufcz",
+
+  "user141": "mdhx",
+
+  "user142": "ybrn",
+
+  "user143": "qtoi",
+
+  "user144": "kpva",
+
+  "user145": "ofzx",
+
+  "user146": "ajqw",
+
+  "user147": "tnyr",
+
+  "user148": "wlpc",
+
+  "user149": "zfxb",
+
+  "user150": "hcrj",
+
+  "user151": "dbto",
+
+  "user152": "nzrl",
+
+  "user153": "wtvy",
+
+  "user154": "clmo",
+
+  "user155": "pvew",
+
+  "user156": "ofqn",
+
+  "user157": "xdlj",
+
+  "user158": "bzvr",
+
+  "user159": "jufq",
+
+  "user160": "womn",
+
+  "user161": "hqzl",
+
+  "user162": "eytn",
+
+  "user163": "rwkx",
+
+  "user164": "vlpu",
+
+  "user165": "dtno",
+
+  "user166": "azmf",
+
+  "user167": "cwrx",
+
+  "user168": "ynol",
+
+  "user169": "pjku",
+
+  "user170": "hfxr",
+
+  "user171": "ymzd",
+
+  "user172": "qvtk",
+
+  "user173": "owrf",
+
+  "user174": "elpn",
+
+  "user175": "tdmz",
+
+  "user176": "jbvo",
+
+  "user177": "kfwr",
+
+  "user178": "plqm",
+
+  "user179": "xzno",
+
+  "user180": "uvlw",
+
+  "user181": "djyx",
+
+  "user182": "cfpz",
+
+  "user183": "mqvi",
+
+  "user184": "rwtn",
+
+  "user185": "kpzl",
+
+  "user186": "fqad",
+
+  "user187": "lyvo",
+
+  "user188": "hpxc",
+
+  "user189": "wnzt",
+
+  "user190": "ojfq",
+
+  "user191": "zmva",
+
+  "user192": "drky",
+
+  "user193": "wlcp",
+
+  "user194": "bntz",
+
+  "user195": "ovjr",
+
+  "user196": "fqzx",
+
+  "user197": "nxom",
+
+  "user198": "pklc",
+
+  "user199": "xvqw",
+
+  "user200": "drmf"
+
+};
+
+
+const timeSlots = [
+  "11:00", "11:45",
+  "12:30", "13:15",
+  "14:00", "14:45",
+  "15:30", "16:15",
+  "17:00", "17:45",
+  "18:30", "19:15",
+  "20:00", "20:45"
+];
+
+let reservations = {
+  "Volley1": {},
+  "Volley2": {},
+  "BasketCalcio": {},
+  "Ping-pong": {}
+};
+
+/***********************
+ *  ON LOAD
+ ***********************/
+document.addEventListener('DOMContentLoaded', () => {
+  // Inizialmente, mostriamo solo login-area, app-area nascosta
+  toggleSections(false);
+
+  // Carichiamo subito le immagini (anche se non loggato)
+  loadAdminImagesRealtime();
+});
+
+/***********************
+ * OPZIONI LOGIN
+ ***********************/
+// 1) Admin: login immediato
+function loginAsAdmin() {
+  currentUser = adminUsername;
+  toggleSections(true);
+  toggleAdminSection();
+  loadReservationsFromFirestore();
+  populateCredentialsTable();
+  populateRegistrationsTable(); // mostra eventuali registrazioni
+  checkAndResetAfterTen();
+  showNotification("Accesso come Admin effettuato!");
+
+  // Carichiamo le immagini in tempo reale
+  loadAdminImagesRealtime();
+}
+
+// 2) Accedi (mostra form user dictionary)
+function showUserLoginForm() {
+  document.getElementById("login-options").style.display = "none";
+  document.getElementById("user-login-form").style.display = "flex";
+  document.getElementById("registration-form").style.display = "none";
+}
+
+// 3) Registrati (mostra form di registrazione)
+function showRegistrationForm() {
+  document.getElementById("login-options").style.display = "none";
+  document.getElementById("user-login-form").style.display = "none";
+  document.getElementById("registration-form").style.display = "flex";
+}
+
+/***********************
+ * LOGIN USER (DICTIONARY)
+ ***********************/
+function userLoginDictionary() {
+  const user = document.getElementById("user-username").value.trim();
+  const pass = document.getElementById("user-password").value.trim();
+
+  if (!user || !pass) {
+    showNotification("Inserisci username e password (dictionary).");
+    return;
   }
-  .field-box h3 {
-    font-size: 1.3rem;
+
+  if (!staticUsers[user]) {
+    showNotification("Username non esiste nel dictionary!");
+    return;
   }
-  .admin h2 {
-    font-size: 1.8rem;
+  if (staticUsers[user] !== pass) {
+    showNotification("Password errata per " + user);
+    return;
   }
-  table, th, td {
-    font-size: 0.9rem;
+
+  // Controlliamo in Firestore se c'è "users/<user>" e se disabled = true
+  db.collection("users").doc(user).get().then(docSnap => {
+    if (docSnap.exists && docSnap.data().disabled) {
+      showNotification("Questo user è disabilitato!");
+      return;
+    }
+    // se non disabilitato
+    currentUser = user;
+    toggleSections(true);
+    toggleAdminSection();
+    loadReservationsFromFirestore();
+    checkAndResetAfterTen();
+    showNotification("Benvenuto " + user + "!");
+
+    // Carichiamo le immagini
+    loadAdminImagesRealtime();
+  }).catch(err => {
+    console.error(err);
+    showNotification("Errore login dictionary. vedi console.");
+  });
+}
+
+/***********************
+ * REGISTRAZIONE (EMAIL, TELEFONO, PASSWORD)
+ ***********************/
+function registerNewUser() {
+  const email = document.getElementById("reg-email").value.trim();
+  const phone = document.getElementById("reg-phone").value.trim();
+  const pass = document.getElementById("reg-password").value.trim();
+
+  if (!email || !phone || !pass) {
+    showNotification("Compila tutti i campi (email, telefono, password)!");
+    return;
+  }
+
+  // Salviamo in "registrations"
+  db.collection("registrations").add({
+    email: email,
+    phone: phone,
+    password: pass,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    showNotification("Registrazione avvenuta con successo! I tuoi dati sono stati salvati.");
+    // Torniamo alle opzioni login
+    document.getElementById("registration-form").style.display = "none";
+    document.getElementById("login-options").style.display = "flex";
+    // Se l'admin entra, vedrà questi dati nella tabella. Non logghiamo subito l'utente.
+  }).catch(err => {
+    console.error(err);
+    showNotification("Errore durante la registrazione. vedi console.");
+  });
+}
+
+/***********************
+ * LOGOUT
+ ***********************/
+function logout() {
+  currentUser = null;
+  toggleSections(false);
+  showNotification("Logout effettuato con successo.");
+}
+
+/***********************
+ * PRENOTAZIONI
+ ***********************/
+function loadReservationsFromFirestore() {
+  const today = getTodayDate();
+  reservations = { "Volley1": {}, "Volley2": {}, "BasketCalcio": {}, "Ping-pong": {} };
+
+  db.collection("reservations")
+    .where("date","==",today)
+    .get()
+    .then(qs => {
+      qs.forEach(doc => {
+        const { field, time, user } = doc.data();
+        if (!reservations[field][today]) reservations[field][today] = {};
+        reservations[field][today][time] = user;
+      });
+      populateAllFields();
+      listenRealtimeForToday();
+    })
+    .catch(err => {
+      console.error("Errore loadReservations:", err);
+      showNotification("Errore caricamento prenotazioni.");
+    });
+}
+
+function listenRealtimeForToday() {
+  const today = getTodayDate();
+  db.collection("reservations")
+    .where("date","==",today)
+    .onSnapshot(snap => {
+      reservations = { "Volley1": {}, "Volley2": {}, "BasketCalcio": {}, "Ping-pong": {} };
+      snap.forEach(doc => {
+        const { field, time, user } = doc.data();
+        if (!reservations[field][today]) reservations[field][today] = {};
+        reservations[field][today][time] = user;
+      });
+      populateAllFields();
+      populateAdminTable();
+      if (currentUser === adminUsername) {
+        populateCredentialsTable();
+        populateRegistrationsTable();
+      }
+    });
+}
+
+function saveReservationToFirestore(fieldName, date, time, user, role) {
+  const docId = `${fieldName}_${date}_${time}_${user}`;
+  return db.collection("reservations").doc(docId).set({ field: fieldName, date, time, user, role });
+}
+
+function deleteReservationFromFirestore(fieldName, date, time, user) {
+  const docId = `${fieldName}_${date}_${time}_${user}`;
+  return db.collection("reservations").doc(docId).delete();
+}
+
+function userHasBookingToday() {
+  const today = getTodayDate();
+  for (let field in reservations) {
+    if (reservations[field][today]) {
+      for (let slot in reservations[field][today]) {
+        if (reservations[field][today][slot] === currentUser) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function populateAllFields() {
+  ["Volley1","Volley2","BasketCalcio","Ping-pong"].forEach(field => populateFieldSlots(field));
+}
+
+function populateFieldSlots(fieldName) {
+  const container = document.getElementById(`slots-${fieldName}`);
+  if (!container) return;
+  container.innerHTML = '';
+  const today = getTodayDate();
+  if (!reservations[fieldName][today]) reservations[fieldName][today] = {};
+
+  timeSlots.forEach(slot => {
+    const slotDiv = document.createElement('div');
+    slotDiv.classList.add('slot');
+    const bookedBy = reservations[fieldName][today][slot];
+
+    if (bookedBy) {
+      if (bookedBy === currentUser) {
+        slotDiv.classList.add('my-booking');
+        slotDiv.textContent = `${slot} - Prenotato da te`;
+        slotDiv.onclick = () => cancelUserReservation(fieldName, slot);
+      } else {
+        slotDiv.classList.add('unavailable');
+        slotDiv.textContent = `${slot} - Prenotato`;
+      }
+    } else {
+      slotDiv.classList.add('available');
+      slotDiv.textContent = `${slot} - Disponibile`;
+      slotDiv.onclick = () => bookSlot(fieldName, slot);
+    }
+    container.appendChild(slotDiv);
+  });
+}
+
+function bookSlot(fieldName, slot) {
+  const today = getTodayDate();
+  if (currentUser !== adminUsername && userHasBookingToday()) {
+    showNotification("Hai già una prenotazione oggi.");
+    return;
+  }
+  if (reservations[fieldName][today][slot]) {
+    showNotification("Slot già prenotato.");
+    return;
+  }
+
+  // Ruolo? Se non hai nulla in Firestore, default "user"
+  const role = (currentUser === adminUsername) ? "admin" : "user";
+  saveReservationToFirestore(fieldName, today, slot, currentUser, role)
+    .then(() => showNotification(`Prenotazione effettuata su ${fieldName} alle ${slot}`))
+    .catch(err => {
+      console.error("Errore prenotazione:", err);
+      showNotification("Errore durante la prenotazione.");
+    });
+}
+
+function cancelUserReservation(fieldName, slot) {
+  const today = getTodayDate();
+  if (reservations[fieldName][today][slot] === currentUser) {
+    deleteReservationFromFirestore(fieldName, today, slot, currentUser)
+      .then(() => showNotification(`Prenotazione annullata per ${fieldName} alle ${slot}`))
+      .catch(err => {
+        console.error("Errore annullamento:", err);
+        showNotification("Errore durante l'annullamento.");
+      });
+  } else {
+    showNotification("Non puoi annullare la prenotazione di un altro utente!");
   }
 }
 
-@media (max-width: 768px) {
-  #login-area {
-    padding: 30px 20px;
+/***********************
+ * SEZIONE ADMIN - PRENOTAZIONI
+ ***********************/
+function populateAdminTable() {
+  if (currentUser !== adminUsername) return;
+  const today = getTodayDate();
+  const tbody = document.getElementById("admin-table");
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  for (let field in reservations) {
+    if (reservations[field][today]) {
+      for (let time in reservations[field][today]) {
+        const user = reservations[field][today][time];
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${field}</td>
+          <td>${today}</td>
+          <td>${time}</td>
+          <td>${user}</td>
+          <td>
+            <button class="cancel-btn" onclick="deleteAdminReservation('${field}','${today}','${time}','${user}')">
+              <i class="fas fa-trash-alt"></i> Elimina
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
   }
-  .fields-container {
-    flex-direction: column;
-    gap: 25px;
+}
+function deleteAdminReservation(field, date, time, user) {
+  deleteReservationFromFirestore(field, date, time, user)
+    .then(() => showNotification(`Prenotazione per ${field} alle ${time} dell'utente ${user} eliminata.`))
+    .catch(err => {
+      console.error("Errore admin delete:", err);
+      showNotification("Errore durante la cancellazione.");
+    });
+}
+
+/***********************
+ * SEZIONE ADMIN - UTENTI (dictionary)
+ ***********************/
+function populateCredentialsTable() {
+  if (currentUser !== adminUsername) return;
+  const tbody = document.getElementById("credentials-table");
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  // Non usiamo Firestore "users" se non per "disabled"; la password la prendiamo da staticUsers
+  db.collection("users").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const username = doc.id;
+      const pass = staticUsers[username] || "N/A";
+      const disabled = data.disabled || false;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${username}</td>
+        <td>${pass}</td>
+        <td>${disabled ? "Disabilitato" : "Attivo"}</td>
+        <td>
+          <button onclick="toggleUserStatus('${username}', ${disabled})">
+            <i class="fas ${disabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+            ${disabled ? 'Attiva' : 'Disabilita'}
+          </button>
+          <button onclick="updateUserPassword('${username}')">
+            <i class="fas fa-edit"></i> Modifica Password
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }).catch(err => console.error(err));
+}
+
+// Attiva/Disabilita user
+function toggleUserStatus(username, isDisabled) {
+  const newStatus = !isDisabled;
+  db.collection("users").doc(username).set({ disabled: newStatus }, { merge: true })
+    .then(() => {
+      showNotification(`Utente ${username} ${newStatus ? 'disabilitato' : 'attivato'}.`);
+      populateCredentialsTable();
+    })
+    .catch(err => {
+      console.error(err);
+      showNotification("Errore aggiornamento stato user.");
+    });
+}
+
+// Modifica password
+function updateUserPassword(username) {
+  const newPass = prompt("Nuova password per " + username + ":");
+  if (!newPass) return;
+
+  if (!staticUsers[username]) {
+    // se non esiste, lo creiamo
+    staticUsers[username] = newPass;
+  } else {
+    staticUsers[username] = newPass;
   }
-  .slot-info {
-    flex-direction: column;
+
+  // Se stiamo modificando admin
+  if (username === adminUsername) {
+    adminPassword = newPass;
   }
-  .slot {
-    width: 100%;
+
+  // (Opzionale) salviamo su Firestore
+  db.collection("users").doc(username).set({ password: newPass }, { merge: true })
+    .then(() => {
+      showNotification(`Password aggiornata per ${username}`);
+      populateCredentialsTable();
+    })
+    .catch(err => {
+      console.error("Errore update password:", err);
+      showNotification("Errore durante l'aggiornamento password.");
+    });
+}
+
+/***********************
+ * SEZIONE ADMIN - IMMAGINI (MAX 10)
+ ***********************/
+function loadAdminImagesRealtime() {
+  db.collection("admin").doc("images").onSnapshot(docSnap => {
+    const container = document.getElementById("login-images-container");
+    if (!container) return;
+    container.innerHTML = "";
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      for (let i = 1; i <= 10; i++) {
+        const url = data[`image${i}URL`] || "";
+        const link = data[`image${i}Link`] || "";
+        if (url) {
+          const a = document.createElement("a");
+          a.href = link || "#";
+          a.target = "_blank";
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = `Immagine ${i}`;
+          img.style.width = "80px";
+          img.style.border = "2px solid var(--color-primary)";
+          img.style.borderRadius = "8px";
+          img.style.margin = "5px";
+          a.appendChild(img);
+          container.appendChild(a);
+        }
+      }
+
+      // Se admin, popola i campi
+      if (currentUser === adminUsername) {
+        for (let i = 1; i <= 10; i++) {
+          document.getElementById(`image${i}URL`).value = data[`image${i}URL`] || "";
+          document.getElementById(`image${i}Link`).value = data[`image${i}Link`] || "";
+        }
+      }
+    } else {
+      // Se non esiste, creiamo doc "images"
+      const payload = {};
+      for (let i = 1; i <= 10; i++) {
+        payload[`image${i}URL`] = "";
+        payload[`image${i}Link`] = "";
+      }
+      db.collection("admin").doc("images").set(payload);
+    }
+  });
+}
+
+function saveAdminImages() {
+  if (currentUser !== adminUsername) {
+    showNotification("Non hai i permessi per modificare le immagini!");
+    return;
   }
-  .logout {
-    position: static;
-    margin: 10px 0;
+  const payload = {};
+  for (let i = 1; i <= 10; i++) {
+    const urlVal = document.getElementById(`image${i}URL`).value.trim();
+    const linkVal = document.getElementById(`image${i}Link`).value.trim();
+    payload[`image${i}URL`] = urlVal;
+    payload[`image${i}Link`] = linkVal;
   }
-  .admin h2 {
-    font-size: 1.6rem;
-  }
-  table, th, td {
-    font-size: 0.85rem;
+  db.collection("admin").doc("images").set(payload)
+    .then(() => showNotification("Immagini salvate con successo!"))
+    .catch(err => {
+      console.error("Errore salvataggio immagini:", err);
+      showNotification("Errore salvataggio immagini.");
+    });
+}
+
+/***********************
+ * SEZIONE ADMIN - REGISTRAZIONI (Nuove)
+ ***********************/
+function populateRegistrationsTable() {
+  if (currentUser !== adminUsername) return;
+  const tbody = document.getElementById("registrations-table");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  db.collection("registrations").orderBy("createdAt","desc").get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        let dateStr = "";
+        if (data.createdAt && data.createdAt.toDate) {
+          dateStr = data.createdAt.toDate().toLocaleString();
+        }
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data.email || ""}</td>
+          <td>${data.phone || ""}</td>
+          <td>${data.password || ""}</td>
+          <td>${dateStr}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      console.error("Errore caricamento registrations:", err);
+    });
+}
+
+/***********************
+ * FUNZIONI VARIE
+ ***********************/
+function toggleSections(isLoggedIn) {
+  document.getElementById("login-area").style.display = isLoggedIn ? "none" : "flex";
+  document.getElementById("app-area").style.display = isLoggedIn ? "flex" : "none";
+}
+
+function toggleAdminSection() {
+  const adminSection = document.getElementById("admin-area");
+  if (!adminSection) return;
+  adminSection.style.display = (currentUser === adminUsername) ? "block" : "none";
+}
+
+/* Reset quotidiano dopo le 10 (no prenotazioni admin) */
+function checkAndResetAfterTen() {
+  const lastResetDate = localStorage.getItem("lastResetDate");
+  const today = getTodayDate();
+  const now = new Date();
+  if (lastResetDate !== today && now.getHours() >= 10) {
+    resetAllReservations();
+    localStorage.setItem("lastResetDate", today);
   }
 }
 
-@media (max-width: 480px) {
-  #login-area h1 {
-    font-size: 1.8rem;
-  }
-  header h1, footer p {
-    font-size: 1.8rem;
-  }
+function resetAllReservations() {
+  const today = getTodayDate();
+  db.collection("reservations")
+    .where("date","==",today)
+    .get()
+    .then(snap => {
+      const batch = db.batch();
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (data.user !== adminUsername) {
+          batch.delete(doc.ref);
+        }
+      });
+      return batch.commit();
+    })
+    .then(() => {
+      showNotification("Prenotazioni resettate per il nuovo giorno (admin escluso).");
+      loadReservationsFromFirestore();
+    })
+    .catch(err => {
+      console.error("Errore resetAllReservations:", err);
+      showNotification("Errore durante il reset delle prenotazioni.");
+    });
 }

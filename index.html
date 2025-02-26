@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Prenotazione Campi</title>
+  
+  <!-- Import Font Awesome per le icone -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Collega il file CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sezione Login -->
+  <div id="login-area">
+    <div class="login-container">
+      <div id="login-images-container"></div>
+      <div class="login-form">
+        <h1>Benvenuto</h1>
+        <p>
+          Inserisci le tue credenziali per prenotare uno dei nostri campi.<br/>
+          Puoi prenotare <strong>un solo slot di 45 minuti</strong> al giorno (dalle 8:00 alle 21:00).
+        </p>
+        <input type="text" id="username" placeholder="Username" aria-label="Username">
+        <input type="password" id="password" placeholder="Password" aria-label="Password">
+        <button onclick="login()"><i class="fas fa-sign-in-alt"></i> Accedi</button>
+        <p>Info: Morganti Isaac - 3381523364</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sezione Applicazione -->
+  <div id="app-area">
+    <header>
+      <a href="#" class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <h1>Prenotazione Campi</h1>
+    </header>
+    
+    <div id="date-selector">
+      <label for="reservation-date">Seleziona data prenotazione:</label>
+      <input type="date" id="reservation-date">
+      <button onclick="updateReservationDate()">Cambia data</button>
+    </div>
+
+    <main>
+      <!-- Sezione Note -->
+      <section class="notes-section" id="notes-section">
+        <h2>Note</h2>
+        <p id="notes-content"></p>
+        <textarea id="admin-notes" rows="5" placeholder="Scrivi qui le tue note..."></textarea>
+      </section>
+      <!-- Sezione Campi -->
+      <div class="fields-container">
+        <div class="field-box" id="field-BeachVolley">
+          <h3>Beach Volley</h3>
+          <div class="slot-info" id="slots-BeachVolley"></div>
+        </div>
+        <div class="field-box" id="field-Calcio">
+          <h3>Calcio</h3>
+          <div class="slot-info" id="slots-Calcio"></div>
+        </div>
+        <div class="field-box" id="field-Polivalente">
+          <h3>Basket / Minitennis / Calcio / Tennis</h3>
+          <div class="slot-info" id="slots-Polivalente"></div>
+        </div>
+      </div>
+
+      <!-- Sezione Admin -->
+      <div class="admin" id="admin-area">
+        <h2>Gestione Prenotazioni (Amministratore)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Data</th>
+              <th>Orario</th>
+              <th>Utente</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table"></tbody>
+        </table>
+
+        <h2>Gestione Utenti</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Stato</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="credentials-table"></tbody>
+        </table>
+
+        <h2>Gestione Immagini Login (max 10)</h2>
+        <div class="image-admin-form">
+          <!-- Qui vanno i blocchi per le immagini (per brevità ne mostro uno, da replicare per le 10 immagini) -->
+          <div>
+            <label>Immagine 1 (URL):</label>
+            <input type="text" id="image1URL" placeholder="URL immagine 1">
+            <label>Link 1:</label>
+            <input type="text" id="image1Link" placeholder="Link immagine 1">
+          </div>
+          <!-- … aggiungi qui i blocchi per image2 fino a image10 … -->
+          <button onclick="saveAdminImages()"><i class="fas fa-save"></i> Salva Immagini</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2025 Prenotazione Campi - Tutti i diritti riservati</p>
+      <p>Morganti Isaac - 3381523364</p>
+    </footer>
+  </div>
+
+  <!-- Contenitore per le Notifiche -->
+  <div id="notification-container"></div>
+
+  <!-- Firebase Scripts (versione 8.x) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  
+  <!-- Collega il file JS aggiornato -->
+  <script src="script.js"></script>
+  <script>
+    // Imposta il valore di default della data al giorno corrente
+    document.getElementById("reservation-date").value = new Date().toISOString().split("T")[0];
+  </script>
+</body>
+</html>

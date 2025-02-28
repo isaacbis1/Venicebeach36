@@ -1,4 +1,22 @@
+/***********************
+ *  DISABILITA TASTO DESTRO E SCORCIATOIE
+ ***********************/
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+});
 
+document.addEventListener('keydown', (event) => {
+  if (
+    event.key === 'F12' ||
+    (event.ctrlKey && event.shiftKey && event.key === 'I') ||
+    (event.ctrlKey && event.key === 'U') ||
+    (event.ctrlKey && event.key === 'S') ||
+    (event.ctrlKey && event.key === 'C')
+  ) {
+    event.preventDefault();
+    return false;
+  }
+});
 
 /***********************
  *  CONFIGURAZIONE FIREBASE

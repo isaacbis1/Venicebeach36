@@ -145,7 +145,7 @@ main {
 #login-images-left {
   position: absolute;
   top: 0;
-  left: 100px;
+  left: 0;
   height: 100%;
   display: flex;
   flex-direction: column;

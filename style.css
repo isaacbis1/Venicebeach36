@@ -121,13 +121,13 @@ main {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.1rem;
+  margin-bottom: 0rem;
 }
 
 #login-images-container a img {
-  max-width: 80px;
-  border: 2px solid var(--color-primary);
+  max-width: 50px;
+  border: 0px solid var(--color-primary);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
